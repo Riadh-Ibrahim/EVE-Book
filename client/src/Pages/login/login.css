@@ -1,0 +1,93 @@
+/* Container for full-width background and center content */
+.container-wrapper {
+    max-width: 1130px;
+    margin: 80px auto;
+    padding: 6rem ;
+    background-color: #c8d2dd; /* Background color */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Flex container for left and right sections */
+.d-flex {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+/* Left side form styling */
+.w-45 {
+    width: 45%;
+}
+
+.bg-white {
+    background-color: #fff;
+}
+
+.form-container {
+    max-width: 350px;
+}
+
+/* Right side styling */
+.right-column {
+    background: url('../../assets/logo.png') no-repeat center center;
+    background-size: cover;
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+    width: 55%; /* Ensure proper width */
+
+}
+
+.right-column h2 {
+    font-size: 2.3rem;
+    font-weight: bold;
+    position: absolute;
+    top: 80px;
+    left: 40px;
+    color: #c48383;
+}
+
+.right-column .btn-outline-light {
+    position: absolute;
+    bottom: 100px;
+    left: 40%;
+    color: #50412a;
+    font-size: 20px;
+    background-color: #cae3aeaf;
+    width: 100px;
+}
+
+.right-column .btn-outline-light:hover {
+    background-color: #677c3caf;
+    color: floralwhite;
+}
+
+/* Media query for screen widths less than 900px */
+@media (max-width: 699px) {
+    .right-column {
+        display: none; /* Hide the right column on smaller screens */
+    }
+
+    .w-45 {
+        width: 100%; /* Ensure left side takes full width */
+    }
+
+    .form-container {
+        max-width: 100%; /* Ensure the form container takes full width */
+    }
+}
+
+/* Dynamic text effect */
+.dynamic-word {
+    color: #dba754;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out; /* Smooth fade transition */
+}
+
+.dynamic-word.show {
+    opacity: 1; /* Fade in effect */
+}
+
+.dynamic-word.hide {
+    opacity: 0; /* Fade out effect */
+}
