@@ -83,7 +83,7 @@ Le module de réservation de VM permet aux utilisateurs de réserver des machine
 ## 🔧 Utilisation
 
 1. **Accéder à l'interface web** : Ouvrez votre navigateur et allez sur `http://localhost:5173`.
-2. **Creer et acceder a vitre compte utilisateur.
+2. **Creer et acceder a vitre compte utilisateur.**
 
 3. **Réserver une VM** :
    - Sélectionnez les dates et heures de debut et de fin de la réservation.
