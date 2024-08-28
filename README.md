@@ -1,4 +1,4 @@
-# 🚀 VM Reservation Module
+# 🚀 EVE-BOOK : VM Reservation Module
 
 ## 📜 Description
 
