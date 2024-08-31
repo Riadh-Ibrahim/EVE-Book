@@ -9,7 +9,7 @@ const app = express();
 const { exec } = require('child_process');
 const Reservation = require('./Models/vmreservation'); // Import the VM reservation model
 
-const SSH_USER = 'admin';
+const SSH_USER = 'root';
 const SSH_PASSWORD = 'eve';
 
 app.use(express.json());
@@ -76,7 +76,36 @@ app.post('/register', async (req, res) => {
 
 require('dotenv').config({ path: './api/config.env' });
 
-// Route to execute Ansible script and save reservation
+app.post('/api/refresh-token', (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+
+    jwt.verify(token, 'your_jwt_secret', { ignoreExpiration: true }, (err, decoded) => {
+        if (err) {
+            console.error('Token verification failed:', err);
+            return res.status(401).json({ message: 'Invalid token' });
+        }
+
+        const newToken = jwt.sign({ id: decoded.id }, 'your_jwt_secret', { expiresIn: '1h' });
+        res.json({ token: newToken });
+    });
+});
+
+// Create VM route
+const nodemailer = require('nodemailer');
+
+// Configuration du transporteur de messagerie
+const transporter = nodemailer.createTransport({
+    service: 'Gmail', // Utilisez le service de messagerie que vous souhaitez
+    auth: {
+        user: 'riadhibrahim007@gmail.com', // Remplacez par votre adresse e-mail
+        pass: 'New@Mot123' // Remplacez par votre mot de passe
+    }
+});
+
 app.post('/api/execute-ansible', async (req, res) => {
     const { startDate, startTime, endDate, endTime } = req.body;
     const token = req.headers.authorization?.split(' ')[1];
@@ -87,14 +116,26 @@ app.post('/api/execute-ansible', async (req, res) => {
 
     jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
         if (err) {
-            console.error('Token verification failed:', err);
-            return res.status(401).json({ message: 'Invalid token' });
+            if (err.name === 'TokenExpiredError') {
+                console.error('Token expired:', err);
+                return res.status(401).json({ message: 'Token expired. Please log in again.' });
+            } else {
+                console.error('Token verification failed:', err);
+                return res.status(401).json({ message: 'Invalid token' });
+            }
         }
 
         const userId = decoded.id;
 
         try {
-            // Save reservation to database
+            // Récupérer l'utilisateur par son ID
+            const user = await User.findById(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            // Enregistrer la réservation dans la base de données
             const reservation = new Reservation({
                 userId,
                 startDate,
@@ -104,24 +145,54 @@ app.post('/api/execute-ansible', async (req, res) => {
             });
             await reservation.save();
 
-            // Execute Ansible script
+            // Exécuter le script Ansible avec la commande SSH
             const ansiblePlaybookPath = '/root/ansible/playbooks/create_vm.yml';
             const remoteHost = '192.168.23.133';
 
-            const command = `sshpass -p '${SSH_PASSWORD}' ssh ${SSH_USER}@${remoteHost} 'ansible-playbook ${ansiblePlaybookPath}'`;
+            const sshCommand = `C:\\WINDOWS\\System32\\OpenSSH\\ssh.exe root@${remoteHost} ansible-playbook ${ansiblePlaybookPath} -i /root/ansible/templates/inventory.ini --extra-vars ansible_ssh_pass=${SSH_PASSWORD} -vvvv`;
 
-            exec(command, (error, stdout, stderr) => {
+            exec(sshCommand, (error, stdout, stderr) => {
                 if (error) {
-                    console.error('Error executing Ansible script:', error);
+                    console.error(`Execution error: ${error}`);
                     return res.status(500).json({ success: false, message: 'Failed to execute Ansible script' });
                 }
 
-                console.log('Ansible script output:', stdout);
-                if (stderr) {
-                    console.error('Ansible script stderr:', stderr);
-                }
+                console.log(`stdout: ${stdout}`);
+                console.error(`stderr: ${stderr}`);
 
-                res.json({ success: true, message: 'VM is being created!' });
+                // Envoyer un e-mail à l'utilisateur avec les détails de la réservation
+                const mailOptions = {
+                    from: 'riadhibrahim007@gmail.com',
+                    to: user.email, // Adresse e-mail de l'utilisateur
+                    subject: 'Details of Your VM Reservation',
+                    text: `
+                        Hello ${user.username},
+
+                         Your reservation has been successfully made. Here are the details of your reservation:
+
+                        - Start Date: ${startDate} at ${startTime}
+                        - End Date: ${endDate} at ${endTime}
+                         - SSH Settings:
+                            - Username : ${SSH_USER}
+                            - Password : ${SSH_PASSWORD}
+                            - VM's IP Address : 192.168.23.133
+
+                        Thank you for your trust,
+
+                        The EVE-BOOK Team
+                    `
+                };
+
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        console.error('Erreur lors de l\'envoi de l\'email:', error);
+                        return res.status(500).json({ success: false, message: 'Failed to send email' });
+                    } else {
+                        console.log('Email envoyé:', info.response);
+                    }
+                });
+
+                res.json({ success: true, message: 'VM is being created and email sent!' });
             });
         } catch (error) {
             console.error('Error saving reservation:', error);
@@ -129,6 +200,7 @@ app.post('/api/execute-ansible', async (req, res) => {
         }
     });
 });
+
 
 // Route to fetch user data by ID
 app.get('/api/user/:id', (req, res) => {
@@ -285,6 +357,44 @@ app.post('/api/validate-old-password', (req, res) => {
           res.status(500).json({ message: 'Server error' });
         });
     });
+  });
+  
+// Route to fetch all users
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Error fetching users' });
+    }
+});
+
+// Route to fetch reservations for a specific user
+app.get('/api/users/:userId/reservations', (req, res) => {
+    const { userId } = req.params;
+    Reservation.find({ userId })
+        .then(reservations => res.json(reservations))
+        .catch(err => {
+            console.error('Error fetching reservations:', err);
+            res.status(500).json({ message: 'Error fetching reservations' });
+        });
+});
+
+// Fetch all VM reservations with user info
+app.get('/api/admin/reservations', (req, res) => {
+    Reservation.find({})
+      .populate('userId', 'username email') // Populate with username and email from the User model
+      .then(reservations => res.json(reservations))
+      .catch(err => res.status(500).json({ message: 'Error fetching reservations' }));
+  });
+  
+  
+  // Fetch all users (if needed for admin)
+  app.get('/api/admin/users', (req, res) => {
+    User.find({})
+      .then(users => res.json(users))
+      .catch(err => res.status(500).json({ message: 'Error fetching users' }));
   });
   
 

@@ -1,11 +1,18 @@
 const mongoose = require('mongoose');
 
-// VM Reservation Schema
 const vmreservationSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
+  },
+  vmName: {
+    type: String, // Add VM name
+    required: true
+  },
+  status: {
+    type: String, // Add status (e.g., 'Pending', 'Active', 'Completed')
+    default: 'Pending'
   },
   startDate: {
     type: Date,
@@ -22,7 +29,13 @@ const vmreservationSchema = new mongoose.Schema({
   endTime: {
     type: String,
     required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now // Track when the reservation was created
   }
 });
 
-module.exports = mongoose.model('VMReservation', vmreservationSchema);
+
+const Reservation = mongoose.model('Reservation', vmreservationSchema);
+module.exports = Reservation;

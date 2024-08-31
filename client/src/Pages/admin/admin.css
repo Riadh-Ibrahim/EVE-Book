@@ -1,0 +1,52 @@
+.admin-dashboard {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.admin-dashboard h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.admin-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.users-list, .reservations-list {
+  width: 45%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.users-list h2, .reservations-list h2 {
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.users-list ul, .reservations-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.users-list li, .reservations-list li {
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.users-list li:hover, .reservations-list li:hover {
+  background-color: #ececec;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
