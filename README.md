@@ -2,7 +2,7 @@
 
 ## 📜 Description
 
-This VM reservation module allows users to book virtual machines (VMs) from an online calendar. Users can specify the date and number of hours for their reservation. The system checks the availability of VMs, creates a VM in the EVE-NG virtualization environment, and sends the SSH authentication parameters to the user.
+This VM reservation module allows users to book virtual machines (VMs) from an online calendar. Users can specify the date and duration for their reservation. The system checks the availability of VMs, creates a VM in the EVE-NG virtualization environment, and sends the SSH authentication parameters to the user.
 
 ## 🛠️ Features
 
