@@ -2,134 +2,133 @@
 
 ## 📜 Description
 
-Le module de réservation de VM permet aux utilisateurs de réserver des machines virtuelles (VM) à partir d'un calendrier en ligne. Les utilisateurs peuvent spécifier la date et le nombre d'heures pour leur réservation. Le système vérifie la disponibilité des VM, crée une VM dans l'environnement de virtualisation EVE-NG, et envoie les paramètres d'authentification SSH à l'utilisateur.
+This VM reservation module allows users to book virtual machines (VMs) from an online calendar. Users can specify the date and duration for their reservation. The system checks the availability of VMs, creates a VM in the EVE-NG virtualization environment, and sends the SSH authentication parameters to the user.
 
-## 🛠️ Fonctionnalités
+## 🛠️ Features
 
-- **Réservation de VM** : Réservez des VM en choisissant la date et la durée depuis une interface web interactive.
-- **Vérification de disponibilité** : Assurez-vous qu'aucune réservation n'existe déjà pour la date spécifiée.
-- **Création automatique de VM** : Déclenche la création d'une VM dans EVE-NG.
-- **Envoi des paramètres SSH** : Transmet les informations d'authentification SSH à l'utilisateur.
-- **Personnalisation du thème** : Adaptez le thème et le style de l'interface selon vos préférences.
-- **Menu principal** : Modifiez le menu principal pour mieux correspondre à vos besoins et améliorer l'expérience utilisateur.
-- **Édition du profil utilisateur** : Permet aux utilisateurs de mettre à jour leurs informations personnelles et de gérer leur profil.
-- **Interface dynamique interactive** : Profitez d'une interface utilisateur réactive et interactive pour une meilleure expérience.
-- **Admin Dashboard** : Accédez à un tableau de bord administrateur pour gérer les réservations et les utilisateurs.
-- **Visualisation et gestion des réservations à venir** : Consultez, modifiez ou annulez les réservations futures.
-- **Visualisation de l'archive des réservations** : Accédez à un historique complet des réservations passées.
+- **VM Reservation**: Book VMs by selecting the date and duration from an interactive web interface.
+- **Availability Check**: Ensure that no existing reservation overlaps with the specified date.
+- **Automatic VM Creation**: Triggers the creation of a VM in EVE-NG.
+- **SSH Parameters Sending**: Sends SSH authentication details to the user.
+- **Theme Customization**: Adjust the theme and style of the interface according to your preferences.
+- **Main Menu**: Modify the main menu to better fit your needs and enhance user experience.
+- **User Profile Editing**: Allows users to update their personal information and manage their profile.
+- **Interactive Dynamic Interface**: Enjoy a responsive and interactive user interface for a better experience.
+- **Admin Dashboard**: Access an admin dashboard to manage reservations and users.
+- **Upcoming Reservations Management**: View, modify, or cancel future reservations.
+- **Reservation Archive Viewing**: Access a complete history of past reservations.
 
-## 📦 Prérequis
+## 📦 Prerequisites
 
-- [Node.js](https://nodejs.org) (pour le backend Express)
-- [MongoDB](https://www.mongodb.com) (pour la gestion des réservations)
-- [Ansible](https://www.ansible.com) (pour la création des VM)
-- [EVE-NG](https://www.eve-ng.net) (environnement de virtualisation)
-- [VMware](https://www.vmware.com) (environnement de virtualisation sur Windows 11)
+- [Node.js](https://nodejs.org) (for the Express backend)
+- [MongoDB](https://www.mongodb.com) (for reservation management)
+- [Ansible](https://www.ansible.com) (for VM creation)
+- [EVE-NG](https://www.eve-ng.net) (virtualization environment)
+- [VMware](https://www.vmware.com) (virtualization environment on Windows 11)
 
 ## 🚀 Installation
 
-1. **Cloner le dépôt** :
-
+1. **Clone the repository**:
+    
    ```bash
    git clone https://github.com/votre-utilisateur/votre-projet.git
    cd votre-projet
-2. **Configurer le backend** :
+2. **Configure the backend** :
 
-   - Naviguez dans le répertoire `api` et installez les dépendances :
+   - Navigate to the `api` directory and install the dependencies:
 
      ```bash
      cd api
      npm install
      ```
 
-   - Créez un fichier `.env` dans `api` pour les variables d'environnement nécessaires:
+   - Create an `.env` file in the `api` directory for necessary environment variables:
 
      ```env
      MONGO_URI=mongodb://localhost:27017/EVE-Book
      ANSIBLE_PLAYBOOK_PATH=/root/ansible/playbooks/create_vm.yml
      ```
 
-3. **Configurer le frontend** :
+3. **Configure the frontend** :
 
-   - Naviguez dans le répertoire `client` et installez les dépendances :
+   - Navigate to the `client` directory and install the dependencies:
 
      ```bash
      cd ../client
      npm install
      ```
 
-   - Configurez les paramètres de connexion au backend dans le fichier de configuration du frontend.
+   - Configure the backend connection settings in the frontend configuration file.
 
-4. **Configurer Ansible** :
+4. **Configure Ansible** :
 
-   - Assurez-vous que le script Ansible pour la création des VM est correctement configuré et accessible. Vérifiez les paramètres de connexion à EVE-NG et les chemins des images de disque.
+   - Ensure that the `Ansible` script for VM creation is correctly configured and accessible. Check the connection settings to EVE-NG and the disk image paths.
 
-5. **Lancer le serveur** :
+5. **Start the Server** :
 
-   - Démarrez le backend :
+   - Start the backend :
 
      ```bash
      cd ../api
      npm start
      ```
 
-   - Démarrez le frontend :
+   - Start the frontend :
 
      ```bash
      cd ../client
      npm start
      ```
 
-## 🔧 Utilisation
+# 🔧 Usage
 
-1. **Accéder à l'interface web** : Ouvrez votre navigateur et allez sur `http://localhost:5173`.
-2. **Creer et acceder a vitre compte utilisateur.**
+1. **Access the web interface**: Open your browser and go to `http://localhost:5173`.
+2. **Create and access your user account.**
 
-3. **Réserver une VM** :
-   - Sélectionnez les dates et heures de debut et de fin de la réservation.
-   - Cliquez sur "Confirmer" pour valider la réservation.
+3. **Reserve a VM**:
+   - Select the start and end dates and times for the reservation.
+   - Click on "Confirm" to finalize the reservation.
 
-4. **Vérification et création** :
-   - Le système vérifiera la disponibilité et créera la VM dans EVE-NG si la date est disponible.
+4. **Verification and creation**:
+   - The system will check availability and create the VM in EVE-NG if the date is available.
 
-5. **Recevoir les informations SSH** : Après la création de la VM, les paramètres d'authentification SSH seront envoyés par email.
+5. **Receive SSH information**: After the VM is created, SSH authentication details will be sent via email.
 
-6. **Personnaliser le thème et le menu principal** :
-   - Modifiez le thème de l'application via le fichier de configuration du frontend.
-   - Personnalisez le menu principal en modifiant les composants de navigation dans le code React.
+6. **Customize the theme and main menu**:
+   - Change the application theme via the frontend configuration file.
+   - Customize the main menu by modifying the navigation components in the React code.
 
-7. **Édition du profil utilisateur** :
-   - Les utilisateurs peuvent mettre à jour leurs informations personnelles depuis la section "Profil" de l'interface.
+7. **Edit user profile**:
+   - Users can update their personal information from the "Profile" section of the interface.
 
-8. **Visualiser et gérer les réservations à venir** :
-   - Consultez la liste des réservations futures dans l'interface d'administration, et apportez les modifications ou annulations nécessaires.
+8. **View and manage upcoming reservations**:
+   - Check the list of future reservations in the admin interface, and make any necessary changes or cancellations.
 
-9. **Visualiser l'archive des réservations** :
-   - Accédez à l'historique complet des réservations passées à partir du tableau de bord administrateur.
-     
-10. **Admin Dashboard** :
-   - Les administrateurs peuvent accéder au tableau de bord via l'interface d'administration pour gérer les réservations et les utilisateurs.
+9. **View reservation history**:
+   - Access the complete history of past reservations from the admin dashboard.
 
-## 📂 Structure du Projet
+10. **Admin Dashboard**:
+    - Administrators can access the dashboard via the admin interface to manage reservations and users.
 
-- `api/` : Code backend Express.js et logique de réservation.
-- `client/` : Code frontend React.js et interface utilisateur.
-- `ansible/` : Scripts Ansible pour la gestion des VM.
-- `docs/` : Documentation et guides supplémentaires.
+# 📂 Project Structure
 
-## 💬 Contribuer
+- `api/`: Backend code with Express.js and reservation logic.
+- `client/`: Frontend code with React.js and user interface.
+- `ansible/`: Ansible scripts for VM management.
+- `docs/`: Documentation and additional guides.
 
-1. Forkez le dépôt.
-2. Créez une branche pour vos modifications (`git checkout -b feature/nouvelle-fonctionnalite`).
-3. Commitez vos modifications (`git commit -am 'Ajoute une nouvelle fonctionnalité'`).
-4. Poussez la branche (`git push origin feature/nouvelle-fonctionnalite`).
-5. Ouvrez une pull request.
+# 💬 Contributing
 
+1. Fork the repository.
+2. Create a branch for your changes (`git checkout -b feature/new-feature`).
+3. Commit your changes (`git commit -am 'Add a new feature'`).
+4. Push the branch (`git push origin feature/new-feature`).
+5. Open a pull request.
 
-## 📚 Documentation
+# 📚 Documentation
 
-Pour plus d'informations sur l'utilisation et la configuration du projet, veuillez consulter les [documents de la documentation](docs/).
+For more information on using and configuring the project, please refer to the [documentation files](docs/).
 
-## 🤝 Contact
+# 🤝 Contact
 
-Pour toute question ou support, vous pouvez nous contacter à [riadhibrahim007@gmail.com](mailto:riadhibrahim007@gmail.com).
+For any questions, you can reach me at [riadhibrahim007@gmail.com](mailto:riadhibrahim007@gmail.com).
