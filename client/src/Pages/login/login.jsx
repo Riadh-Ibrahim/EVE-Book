@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 function Login() {
@@ -12,21 +11,31 @@ function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         axios.post('http://localhost:3001/login', { email, password })
             .then(result => {
                 console.log("Response data:", result.data); // Debugging line
+
                 if (result.data.message === "Success") {
                     localStorage.setItem('token', result.data.token); // Save token if needed
-                    navigate('/home');
+                    
+                    // Check for redirect field and handle admin redirection
+                    if (email === 'admin@admin' && password === 'admin') {
+                        navigate('/admin'); // Redirect admin to dashboard
+                    } else if (result.data.redirect) {
+                        navigate(result.data.redirect); // Redirect based on backend response
+                    } else {
+                        navigate('/home'); // Default redirect for normal users
+                    }
                 } else {
                     setError(result.data.message); // Use message from backend response
                 }
             })
             .catch(err => {
-                console.error("Login error:", err.response.data); // Debugging line
+                console.error("Login error:", err.response?.data || err); // Debugging line
                 setError("An error occurred. Please try again."); // Set generic error message
             });
-    };    
+    };
 
     return (
         <div className="container-wrapper">
@@ -34,7 +43,7 @@ function Login() {
                 {/* Left Side - Form */}
                 <div className="w-45 bg-white p-5">
                     <div className="form-container w-100">
-                        <h2 className="text-center">Sign in</h2>
+                        <h2 className="text-center sign-in-text"><strong>Sign in</strong></h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="email">

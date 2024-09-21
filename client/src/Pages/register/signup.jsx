@@ -54,7 +54,7 @@ function Signup() {
                 {/* Left Side - Form */}
                 <div className={`d-flex justify-content-center align-items-center ${isMobile ? 'w-100' : 'w-45'} bg-white p-5`}>
                     <div className="form-container w-100">
-                        <h2 className="text-center">Register</h2>
+                        <h2 className="text-center register-text"><strong>Register</strong></h2>
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="name">

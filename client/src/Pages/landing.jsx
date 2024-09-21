@@ -38,7 +38,7 @@ const Landing = () => {
           <div className="col-lg-6 text-center text-lg-left">
             <h1 
               className="display-4 font-weight-bold" 
-              style={{ fontFamily: "'Poppins', sans-serif", fontSize: '3rem' }} 
+              style={{ fontFamily: "'Poppins', sans-serif", fontSize: '3rem', color: 'white' }} 
             >
               Reserve Powerful VMs for Your Needs
             </h1>

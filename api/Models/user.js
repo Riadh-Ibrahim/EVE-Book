@@ -18,9 +18,15 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  status: {
+    type: String,
+    enum: ['Active', 'Deactivated'],
+    default: 'Active',
   }
 });
 
+// Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
       return next();
@@ -30,7 +36,7 @@ userSchema.pre('save', async function (next) {
       this.password = await bcrypt.hash(this.password, salt);
       next();
   } catch (err) {
-      console.error('Error hashing password:', err);  // Ensure this is logged
+      console.error('Error hashing password:', err); 
       next(err);
   }
 });

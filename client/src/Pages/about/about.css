@@ -1,115 +1,139 @@
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+}
+
+.about-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+              url('../../assets/about.jpg') no-repeat center center fixed;
+  background-size: cover;
+  filter: blur(5px);
+  z-index: -1;
+}
+
+.about-container {
+  padding: 50px;
+  max-width: 1000px;
+  margin: 20px auto;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 15px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  border: 1px solid #007bff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transform: scale(1);
+  transition: transform 0.3s ease-in-out;
+  box-shadow: #222;
+}
+
+.about-container:hover {
+  transform: scale(1.02);
+}
+
+.about-title {
+  font-size: 2.7rem;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  animation: fadeInUp 3s ease;
+}
+
+.about-title::after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 4px;
+  background-color: #007bff;
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
+.about-mission h2,
+.about-values h2 {
+  animation: fadeIn 2s ease;
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #222;
+  border-bottom: 3px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.about-values li {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+  color: #555;
+  transition: all 0.3s ease;
+}
+
+.about-values li:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+  transform: translateX(10px); /* Slight movement effect */
+}
+
+.about-values li::before {
+  content: '✔';
+  color: #007bff;
+  position: absolute;
+  left: 0;
+  font-size: 1.4rem;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  
-  .about-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: linear-gradient(to right, #f5f7f9, #e3e4e8); /* Soft gradient background */
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
   .about-container {
-    padding: 40px;
-    max-width: 1000px;
-    margin: 80px auto;
-    background: #ffffff; /* White background for content */
-    border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border: 1px solid #726a92; /* Light border for a subtle outline */
-    flex: 1; /* Allow the container to grow and shrink */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
+    padding: 30px;
+    margin: 50px auto;
   }
-  
+
   .about-title {
     font-size: 2.2rem;
-    font-weight: 700;
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    position: relative;
   }
-  
-  .about-title::after {
-    content: "";
-    display: block;
-    width: 900px;
-    height: 4px;
-    background-color: #007bff; /* Blue line */
-    margin: 10px auto 0;
-    border-radius: 2px;
-  }
-  
-  .about-intro p {
-    font-size: 1.2rem;
-    color: #555;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-  
-  .about-mission,
-  .about-values {
-    margin-bottom: 40px;
-  }
-  
-  .about-mission h2,
-  .about-values h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #222;
-    margin-bottom: 20px;
-    text-align: center;
-    border-bottom: 3px solid #007bff; /* Accent color for border */
-    padding-bottom: 10px;
-  }
-  
-  .about-mission p,
+
   .about-values li {
-    font-size: 1.1rem;
-    color: #666;
-    line-height: 1.7;
+    font-size: 1rem;
   }
-  
-  .about-values ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .about-values li {
-    position: relative;
-    padding-left: 25px;
-    margin-bottom: 15px;
-  }
-  
-  .about-values li::before {
-    content: '✔';
-    color: #007bff; /* Accent color for checkmark */
-    position: absolute;
-    left: 0;
-    font-size: 1.2rem;
-    line-height: 1.5;
-  }
-  
-  @media (max-width: 768px) {
-    .about-container {
-      padding: 20px;
-    }
-  
-    .about-title {
-      font-size: 2rem;
-    }
-  
-    .about-intro p,
-    .about-mission p,
-    .about-values li {
-      font-size: 1rem;
-    }
-  }
-  
+}

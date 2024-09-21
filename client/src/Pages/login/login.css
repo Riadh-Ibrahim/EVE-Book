@@ -7,6 +7,10 @@
     border-radius: 10px; /* Rounded corners */
 }
 
+.sign-in-text {
+    color: black;
+}  
+
 /* Flex container for left and right sections */
 .d-flex {
     display: flex;

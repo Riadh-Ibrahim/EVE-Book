@@ -2,6 +2,10 @@
     max-width: 350px;
 }
 
+.register-text{
+    color: black;
+}
+
 .right-column {
     background: url('../../assets/logo.png') no-repeat center center;
     background-size: cover;

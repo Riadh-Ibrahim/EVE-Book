@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import TimePicker from 'react-time-picker';
-import { FaClock } from 'react-icons/fa';
+import { FaClock, FaMoon, FaSun } from 'react-icons/fa'; // Added icons for theme toggle
 import 'react-calendar/dist/Calendar.css';
 import 'react-time-picker/dist/TimePicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import homeImage from '../assets/home.jpg';
+import homeImage1 from '../assets/home1.jpg';
 import Navbar from '../Components/Navbar/navbar';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -16,9 +17,11 @@ function Home() {
   const [startTime, setStartTime] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [endTime, setEndTime] = useState(null);
+  const [vmName, setVmName] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
   const [data, setData] = useState(null);
   const [apiError, setApiError] = useState(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false); // New state for theme
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,12 +56,11 @@ function Home() {
 
   const handleStartTimeChange = (newTime) => {
     if (newTime === null) {
-      // Handle the case where newTime is null
       setStartTime(null);
       setAlertMessage('');
       return;
     }
-  
+
     const selectedHour = parseInt(newTime.split(':')[0], 10);
     if (isToday && selectedHour <= currentTime.getHours()) {
       setAlertMessage('Start time must be after the current hour.');
@@ -80,23 +82,22 @@ function Home() {
     }
   };
 
- const handleEndTimeChange = (newTime) => {
-  if (newTime === null) {
-    // Handle the case where newTime is null
-    setEndTime(null);
-    setAlertMessage('');
-    return;
-  }
+  const handleEndTimeChange = (newTime) => {
+    if (newTime === null) {
+      setEndTime(null);
+      setAlertMessage('');
+      return;
+    }
 
-  if (endDate && new Date(endDate).toDateString() === new Date(startDate).toDateString() && newTime <= startTime) {
-    setAlertMessage('End time must be after the start time.');
-    setEndTime(null);
-    setEndDate(null);
-  } else {
-    setEndTime(newTime);
-    setAlertMessage('');
-  }
-};
+    if (endDate && new Date(endDate).toDateString() === new Date(startDate).toDateString() && newTime <= startTime) {
+      setAlertMessage('End time must be after the start time.');
+      setEndTime(null);
+      setEndDate(null);
+    } else {
+      setEndTime(newTime);
+      setAlertMessage('');
+    }
+  };
 
   const handleNextStep = () => {
     if (!startTime) {
@@ -111,60 +112,88 @@ function Home() {
     setStep(1);
   };
 
+  const handleVmNameChange = (event) => {
+    setVmName(event.target.value);
+  };
+
   const calculateDuration = () => {
     if (startDate && startTime && endDate && endTime) {
       const start = new Date(startDate);
       const [startHour, startMinute] = startTime.split(':').map(Number);
       start.setHours(startHour, startMinute);
-
+  
       const end = new Date(endDate);
       const [endHour, endMinute] = endTime.split(':').map(Number);
       end.setHours(endHour, endMinute);
-
+  
       const durationMs = end - start;
       if (durationMs <= 0) return 'Invalid duration';
-
+  
       const durationHrs = Math.floor(durationMs / (1000 * 60 * 60));
       const durationMins = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
-
-      return `${durationHrs} hour(s) and ${durationMins} minute(s);`;
+  
+      if (durationHrs > 0 && durationMins > 0) {
+        return `${durationHrs} hour(s) and ${durationMins} minute(s)`;
+      }
+      if (durationHrs > 0) {
+        return `${durationHrs} hour(s)`;
+      }
+      if (durationMins > 0) {
+        return `${durationMins} minute(s)`;
+      }
+      return '0 minutes';
     }
     return '';
   };
-
+  
   const duration = calculateDuration();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const executeAnsibleScript = async () => {
-    const reservationData = {
-        startDate,
-        startTime,
-        endDate,
-        endTime,
-    };
-
-    try {
-        // Save the reservation and execute the Ansible script
-        const response = await fetch('http://localhost:3001/api/execute-ansible', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(reservationData),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            alert(result.message);
-        } else {
-            setAlertMessage(result.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        setAlertMessage('An error occurred while processing your reservation.');
+  const handleConfirm = async () => {
+    if (!vmName) {
+      setAlertMessage('Please enter a VM name.');
+      return;
     }
-};
+  
+    if (isSubmitting) return; // Prevent multiple submissions
+  
+    setIsSubmitting(true); // Set submitting state to true
+  
+    const reservationData = {
+      vmName,
+      status: 'Pending',
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+      duration,
+    };
+  
+    // Redirect to loading page
+    navigate('/loading', { state: { reservationData } });
+  
+    try {
+      const response = await fetch('http://localhost:3001/api/execute-ansible', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(reservationData),
+      });
+  
+      const result = await response.json();
+  
+      if (!result.success) {
+        setAlertMessage(result.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setAlertMessage('An error occurred while processing your reservation.');
+    } finally {
+      setIsSubmitting(false); // Reset submitting state
+    }
+  };  
 
   const backgroundContainerStyle = {
     position: 'absolute',
@@ -172,11 +201,12 @@ function Home() {
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundImage: `url(${homeImage})`,
+    backgroundImage: `url(${isDarkTheme ? homeImage1 : homeImage})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     filter: 'blur(8px)',
     zIndex: -1,
+    backgroundColor: isDarkTheme ? '#333' : '#fff', // Background color based on theme
   };
 
   const contentContainerStyle = {
@@ -185,9 +215,9 @@ function Home() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     padding: '40px 30px',
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: isDarkTheme ? 'rgba(50, 50, 50, 0.95)' : 'rgba(255, 255, 255, 0.95)', // Adjust based on theme
     borderRadius: '12px',
-    boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
+    boxShadow: isDarkTheme ? '0 8px 16px rgba(0, 0, 0, 0.8)' : '0 8px 16px rgba(0, 0, 0, 0.2)', // Adjust shadow based on theme
     maxWidth: '700px',
     width: '90%',
     textAlign: 'center',
@@ -197,17 +227,17 @@ function Home() {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
-    border: '1px solid #dee2e6',
+    backgroundColor: isDarkTheme ? '#444' : '#f8f9fa', // Background color based on theme
+    border: isDarkTheme ? '1px solid #555' : '1px solid #dee2e6', // Border color based on theme
     borderRadius: '10px',
     padding: '20px',
-    boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+    boxShadow: isDarkTheme ? '0 6px 12px rgba(0, 0, 0, 0.5)' : '0 6px 12px rgba(0, 0, 0, 0.15)', // Adjust shadow based on theme
     margin: 'auto',
   };
 
   const headingStyle = {
     fontFamily: "'Poppins', sans-serif",
-    color: '#333',
+    color: isDarkTheme ? '#ddd' : '#333', // Text color based on theme
     fontSize: '2rem',
     fontWeight: '600',
     marginBottom: '20px',
@@ -215,7 +245,7 @@ function Home() {
 
   const buttonStyle = {
     marginTop: '20px',
-    backgroundColor: '#0062cc',
+    backgroundColor: isDarkTheme ? '#444' : '#0062cc', // Button color based on theme
     color: '#fff',
     borderRadius: '50px',
     padding: '10px 30px',
@@ -228,7 +258,7 @@ function Home() {
 
   const clockIconStyle = {
     marginLeft: '10px',
-    color: '#0062cc',
+    color: isDarkTheme ? '#ddd' : '#0062cc', // Icon color based on theme
     verticalAlign: 'middle',
   };
 
@@ -236,19 +266,27 @@ function Home() {
     color: '#cc0000',
     fontWeight: 'bold',
     marginTop: '20px',
-  };              
+  };
+
+  // Toggle theme function
+  const toggleTheme = () => {
+    setIsDarkTheme(prevTheme => !prevTheme);
+  };
 
   return (
     <div style={{ position: 'relative', height: '100vh', overflow: 'hidden' }}>
-      <Navbar /> {/* Include the Navbar here */}
-      {/* Blurred background container */}
+      <Navbar />
       <div style={backgroundContainerStyle} />
-
-      {/* Content container */}
+      <style>
+        {`
+          /* Ensure the navigation arrows are black */
+          .react-calendar__navigation button {
+            color: black !important;
+          }
+        `}
+      </style>
       <div style={contentContainerStyle}>
-        <h2 style={headingStyle}>
-          Select Your VM Reservation Date
-        </h2>
+        <h2 style={headingStyle}>Select Your VM Reservation Date</h2>
         <div style={calendarWrapperStyle}>
           {step === 1 && (
             <div className="mb-4">
@@ -256,7 +294,7 @@ function Home() {
               <Calendar
                 onChange={handleStartDateChange}
                 value={startDate}
-                minDate={new Date()} // Allow choosing today as start date
+                minDate={new Date()}
               />
               <div className="mt-3">
                 <TimePicker
@@ -294,6 +332,20 @@ function Home() {
                   format="HH:mm"
                 />
               </div>
+              <div className="mt-3">
+                <input
+                  type="text"
+                  value={vmName}
+                  onChange={handleVmNameChange}
+                  placeholder="Enter VM Name"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    borderRadius: '5px',
+                    border: isDarkTheme ? '1px solid #555' : '1px solid #ccc', // Border color based on theme
+                  }}
+                />
+              </div>
               {endDate && endTime && (
                 <div>
                   <p>Duration: {duration}</p>
@@ -305,7 +357,7 @@ function Home() {
                   </button>
                   <button
                     style={buttonStyle}
-                    onClick={executeAnsibleScript}
+                    onClick={handleConfirm}
                   >
                     Confirm
                   </button>
@@ -318,6 +370,25 @@ function Home() {
             <div style={alertStyle}>{alertMessage}</div>
           )}
         </div>
+
+        {/* Theme toggle button */}
+        <button
+          onClick={toggleTheme}
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            backgroundColor: isDarkTheme ? '#555' : '#ddd',
+            color: isDarkTheme ? '#fff' : '#000',
+            border: 'none',
+            borderRadius: '50%',
+            padding: '10px',
+            cursor: 'pointer',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          {isDarkTheme ? <FaSun /> : <FaMoon />}
+        </button>
       </div>
     </div>
   );

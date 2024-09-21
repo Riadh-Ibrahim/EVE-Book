@@ -1,0 +1,175 @@
+/* Contact Page */
+#contact-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background: url('../../assets/background.jpg') center/cover no-repeat;
+    padding-top: 100px;
+}
+
+.navbar-container {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-content {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 3rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    width: 90vw;
+    max-width: 700px;
+    text-align: center;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+}
+
+.contact-content:hover {
+    transform: scale(1.05); /* Scale the form slightly on hover */
+}
+
+.contactPageTitle {
+    font-size: 2.5rem;
+    color: #283593;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.contactDesc {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+.contactForm {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.name, .email, .msg {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.name:focus, .email:focus, .msg:focus {
+    background-color: #e0e0e0;
+    outline: none;
+}
+
+.submitBtn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    background-color: #283593;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.submitBtn:hover {
+    background-color: #3949ab;
+    transform: scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+    .contact-content {
+        padding: 2rem;
+    }
+
+    .contactPageTitle {
+        font-size: 2rem;
+    }
+
+    .submitBtn {
+        font-size: 1rem;
+    }
+}
+
+/* Modal Overlay */
+#contact-page .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Dark background with some opacity */
+    backdrop-filter: blur(8px); /* Apply blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Ensure it's above other content */
+}
+
+/* Modal */
+#contact-page .modal {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    max-height: 25vh; 
+    overflow-y: auto; /* Add scroll if content overflows */
+    display: block; /* Ensure it's not hidden */
+    margin: 350px 650px;
+}
+
+/* Strong Message */
+#contact-page .modal .strong-message {
+    font-weight: bold; /* Make the text bold */
+    font-size: 1.2rem; /* Adjust font size if needed */
+    line-height: 1.5; /* Adjust line height for spacing between lines */
+}
+
+/* Modal Buttons */
+#contact-page .modal-buttons {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+#contact-page .modal-buttons button {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* OK Button */
+#contact-page .modal-buttons .ok-button {
+    background-color: #283593;
+    color: white;
+}
+
+#contact-page .modal-buttons .ok-button:hover {
+    background-color: #3949ab;
+}
+
+/* Send Another Button */
+#contact-page .modal-buttons .send-another-button {
+    background-color: #ff5722;
+    color: white;
+}
+
+#contact-page .modal-buttons .send-another-button:hover {
+    background-color: #e64a19;
+}

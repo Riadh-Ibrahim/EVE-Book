@@ -1,0 +1,236 @@
+.body {
+  background: linear-gradient(135deg, #003366, #003c8f); /* Dark blue gradient */
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.adminDashboard {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.888);
+  max-width: 1500px;
+  width: 100%;
+  margin-left: 100px; /* Add margin to shift right */
+  margin-top: 30px; /* Add margin to shift right */
+}
+
+.adminDashboard h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  color: #336495;
+  background: linear-gradient(45deg, #FF6B6B, #8374b7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.adminContent {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.usersList, .reservationsList {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  max-width: 150rem;
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+  overflow-y: auto;
+}
+
+.usersList:hover, .reservationsList:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+}
+
+.usersList h2, .reservationsList h2 {
+  margin-bottom: 20px;
+  font-size: 1.75rem;
+  color: #34495e;
+  border-bottom: 3px solid #2980b9;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.adminTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+.adminTable th, .adminTable td {
+  padding: 5px 8px; /* Reduced padding */
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  color: #2c3e50;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Ensure alignment for smaller padding */
+}
+
+.adminTable th {
+  background-color: #2980b9;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+  font-size: 14px; /* Adjusted font size */
+}
+
+.adminTable td {
+  font-size: 14px; /* Adjusted font size */
+  max-height: 50px; /* Limit height of table cells */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.adminTable tr:hover td {
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.confirmationDialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.confirmationDialogContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px; 
+  font-weight: 500;
+}
+
+.confirmationDialogButton {
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px;
+}
+
+.confirmationDialogButton.confirm {
+  background-color: #2980b9; /* Blue background */
+  color: #fff;
+}
+
+.confirmationDialogButton.confirm:hover {
+  background-color: #1f6391; /* Darker blue */
+}
+
+.confirmationDialogButton.cancel {
+  background-color: #e74c3c; /* Red background */
+  color: #fff;
+}
+
+.confirmationDialogButton.cancel:hover {
+  background-color: #c0392b; /* Darker red */
+}
+
+.successNotification {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.notificationContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-weight: 600;
+}
+
+.okButton {
+  background-color: #2980b9;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 500;
+}
+
+.okButton:hover {
+  background-color: #1f6391;
+}
+
+@media screen and (max-width: 768px) {
+  .adminContent {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .usersList, .reservationsList {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .adminDashboard h1 {
+    font-size: 2rem;
+  }
+}
+
+.errorMessage {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.25rem;
+}
+
+.deleteButton {
+  background-color: #e74c3c; /* Red background */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.deleteButton:hover {
+  background-color: #c0392b; /* Darker red */
+}
+
+.deleteButton:focus {
+  outline: none;
+}
