@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../assets/logo.png'; // Update with the path to your logo image
+import logo from '../../assets/logo.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './navbar.css'; // Import the CSS file
-import { FaUserCircle } from 'react-icons/fa'; // Import Font Awesome icon
-
+import './navbar.css';
+import { FaUserCircle } from 'react-icons/fa';
 function Navbar() {
   const navigate = useNavigate();
   const currentPath = window.location.pathname;
@@ -18,9 +17,10 @@ function Navbar() {
     }
   }, [currentPath, navigate]);
 
+
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove token from local storage
-    navigate('/login'); // Redirect to login page
+    localStorage.removeItem('token');
+    navigate('/login');
 };
 
 
@@ -56,7 +56,7 @@ function Navbar() {
         <Link to="/contact" className="button">Contact Us</Link>
         {!isLandingPage && (
           <Link to="/profile" className="profile-icon">
-            <FaUserCircle size={30} /> {/* Profile icon */}
+            <FaUserCircle size={30} />
           </Link>
         )}
       </div>

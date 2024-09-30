@@ -1,6 +1,7 @@
 import React from 'react';
 import './features.css';
-import Navbar from '../../Components/Navbar/navbar'; // Adjust the path as necessary
+import Navbar from '../../Components/Navbar/navbar';
+import { FaCalendarAlt, FaCogs, FaLock, FaCalendarCheck, FaUserShield } from 'react-icons/fa';
 
 function Features() {
   return (
@@ -14,7 +15,7 @@ function Features() {
         <div className="features-content">
           <div className="feature-item">
             <div className="feature-icon">
-              <i className="fas fa-calendar-alt"></i>
+              <FaCalendarAlt />
             </div>
             <h2>Easy VM Reservation</h2>
             <p>
@@ -23,7 +24,7 @@ function Features() {
           </div>
           <div className="feature-item">
             <div className="feature-icon">
-              <i className="fas fa-cogs"></i>
+              <FaCogs />
             </div>
             <h2>Automated VM Creation</h2>
             <p>
@@ -32,7 +33,7 @@ function Features() {
           </div>
           <div className="feature-item">
             <div className="feature-icon">
-              <i className="fas fa-lock"></i>
+              <FaLock />
             </div>
             <h2>Secure SSH Access</h2>
             <p>
@@ -41,7 +42,7 @@ function Features() {
           </div>
           <div className="feature-item">
             <div className="feature-icon">
-              <i className="fas fa-calendar-check"></i>
+              <FaCalendarCheck />
             </div>
             <h2>Real-Time Availability</h2>
             <p>
@@ -50,7 +51,7 @@ function Features() {
           </div>
           <div className="feature-item">
             <div className="feature-icon">
-              <i className="fas fa-user-shield"></i>
+              <FaUserShield />
             </div>
             <h2>User-Friendly Interface</h2>
             <p>

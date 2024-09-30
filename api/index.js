@@ -7,10 +7,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const app = express();
 const { exec } = require('child_process');
-const Reservation = require('./Models/vmreservation'); // Import the VM reservation model
+const Reservation = require('./Models/vmreservation');
 const { format } = require('date-fns');
 
-const SSH_USER = 'root';
+const SSH_USER = 'admin';
 const SSH_PASSWORD = 'eve';
 
 app.use(express.json());
@@ -24,7 +24,73 @@ mongoose.connect("mongodb://127.0.0.1:27017/EVE-Book", {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
 
-// API routes
+app.get('/api/check-start-date', async (req, res) => {
+  const { start } = req.query;
+
+  try {
+      const newStart = new Date(start);
+
+      if (isNaN(newStart.getTime())) {
+          return res.status(400).json({ conflict: false, message: 'Invalid start date.' });
+      }
+
+      const existingReservations = await Reservation.find();
+
+      const conflict = existingReservations.some(reservation => {
+          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
+          reservationStart.setHours(reservationStart.getHours() + 1); // Add 1 hour
+          
+          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
+          reservationEnd.setHours(reservationEnd.getHours() + 1); // Add 1 hour
+
+          const isOverlappingEntirely = newStart < reservationStart && newStart >= reservationEnd;
+          const isSameTime = newStart.getTime() === reservationStart.getTime();
+          const isContainedWithin = newStart > reservationStart && newStart < reservationEnd;
+          const isOverlappingPartially = newStart >= reservationStart && newStart <= reservationEnd;
+
+          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
+      });
+
+      res.json({ conflict });
+  } catch (error) {
+      console.error('Error checking start date conflict:', error);
+      res.status(500).json({ conflict: false, message: 'Error checking start date.' });
+  }
+});
+
+app.get('/api/check-end-date', async (req, res) => {
+  const { start, end } = req.query;
+
+  try {
+      const newStart = new Date(start);
+      const newEnd = new Date(end);
+
+      if (isNaN(newStart.getTime()) || isNaN(newEnd.getTime())) {
+          return res.status(400).json({ conflict: false, message: 'Invalid start or end date.' });
+      }
+
+      const existingReservations = await Reservation.find();
+
+      const conflict = existingReservations.some(reservation => {
+          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
+          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
+
+          const isOverlappingEntirely = newStart < reservationStart && newEnd > reservationEnd;
+          const isSameTime = newStart.getTime() === reservationStart.getTime() && newEnd.getTime() === reservationEnd.getTime();
+          const isContainedWithin = newStart > reservationStart && newEnd < reservationEnd;
+          const isOverlappingPartially = (newStart >= reservationStart && newStart <= reservationEnd) || 
+                                         (newEnd >= reservationStart && newEnd <= reservationEnd);
+
+          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
+      });
+
+      res.json({ conflict });
+  } catch (error) {
+      console.error('Error checking end date conflict:', error);
+      res.status(500).json({ conflict: false, message: 'Error checking end date.' });
+  }
+});
+
 // Register route
 app.post('/register', async (req, res) => {
     try {
@@ -46,7 +112,6 @@ app.post('/register', async (req, res) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
-  // Check if the login attempt is for the admin user
   if (email === 'admin@admin' && password === 'admin') {
     const token = jwt.sign({ role: 'admin' }, 'your_jwt_secret', { expiresIn: '1h' });
     return res.json({ message: "Success", token, redirect: "/admin" });
@@ -102,14 +167,13 @@ app.post('/api/refresh-token', (req, res) => {
     });
 });
 
-// Create VM route
 const nodemailer = require('nodemailer');
 
 // Configuration du transporteur de messagerie
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Utilisez le service de messagerie que vous souhaitez
+    service: 'gmail',
     auth: {
-        user: 'evengbook@gmail.com', // Remplacez par votre adresse e-mail
+        user: 'evengbook@gmail.com',
         pass: 'mzat hrtf uxro qczv'
     }
 });
@@ -118,12 +182,10 @@ app.post('/api/execute-ansible', async (req, res) => {
   const { vmName, startDate, startTime, endDate, endTime } = req.body;
   const token = req.headers.authorization?.split(' ')[1];
 
-  // Validate if token is present
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
   }
 
-  // Verify token
   let decoded;
   try {
     decoded = jwt.verify(token, 'your_jwt_secret');
@@ -136,7 +198,6 @@ app.post('/api/execute-ansible', async (req, res) => {
     return res.status(401).json({ message: 'Invalid token' });
   }
 
-  // Retrieve user data
   const userId = decoded.id;
   try {
     const user = await User.findById(userId);
@@ -144,13 +205,11 @@ app.post('/api/execute-ansible', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Check if reservation already exists
     const existingReservation = await Reservation.findOne({ vmName, startDate, startTime, user: user._id });
     if (existingReservation) {
       return res.status(409).json({ message: 'Reservation already exists' });
     }
 
-    // Create a new reservation
     const reservation = new Reservation({
       vmName,
       status: 'Pending',
@@ -162,7 +221,6 @@ app.post('/api/execute-ansible', async (req, res) => {
     });
     await reservation.save();
 
-    // Execute Ansible script for VM creation
     const ansiblePlaybookPath = '/root/ansible/playbooks/create_vm.yml';
     const remoteHost = '192.168.23.133';
     const sshCommand = `C:\\WINDOWS\\System32\\OpenSSH\\ssh.exe root@${remoteHost} ansible-playbook ${ansiblePlaybookPath} -i /root/ansible/templates/inventory.ini --extra-vars ansible_ssh_pass=${SSH_PASSWORD} -vvvv`;
@@ -175,11 +233,9 @@ app.post('/api/execute-ansible', async (req, res) => {
 
       console.error(`stderr: ${stderr}`);
 
-      // Format dates for email
       const formattedStartDate = format(new Date(startDate), 'yyyy-MM-dd');
       const formattedEndDate = format(new Date(endDate), 'yyyy-MM-dd');
 
-      // Prepare email content
       const mailOptions = {
         from: 'evengbook@gmail.com',
         to: user.email,
@@ -202,7 +258,6 @@ app.post('/api/execute-ansible', async (req, res) => {
         `
       };
 
-      // Send email notification
       try {
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully');
@@ -237,7 +292,7 @@ app.use((req, res, next) => {
 
 // Route to fetch user data by ID
 app.get('/api/user/:id', (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1]; // Extract token from the "Bearer token" header
+    const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
@@ -263,10 +318,9 @@ app.get('/api/user/:id', (req, res) => {
     });
   });  
 
-// Route to validate old password
 app.post('/api/validate-old-password', (req, res) => {
     const { oldPassword } = req.body;
-    const token = req.headers.authorization?.split(' ')[1]; // Extract token from the header
+    const token = req.headers.authorization?.split(' ')[1];
   
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
@@ -302,7 +356,7 @@ app.post('/api/validate-old-password', (req, res) => {
 
 // Route to update user profile
 app.put('/api/user/:id', (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from the header
+  const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
       return res.status(401).json({ message: 'No token provided' });
   }
@@ -336,7 +390,6 @@ app.put('/api/user/:id', (req, res) => {
                           return res.status(401).json({ message: 'Old password is incorrect' });
                       }
 
-                      // Update user fields
                       if (username) user.username = username;
                       if (email) user.email = email;
 
@@ -364,7 +417,6 @@ app.put('/api/user/:id', (req, res) => {
                       }
                   });
               } else {
-                  // If no oldPassword is provided, allow updating other fields directly
                   if (username) user.username = username;
                   if (email) user.email = email;
 
@@ -383,7 +435,6 @@ app.put('/api/user/:id', (req, res) => {
   });
 });
 
-// Middleware to verify JWT token
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -398,7 +449,7 @@ const authenticateToken = (req, res, next) => {
 
 // Endpoint to deactivate user account
 app.post('/api/user/deactivate', (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]; // Extract token from the header
+  const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
@@ -416,7 +467,6 @@ app.post('/api/user/deactivate', (req, res) => {
           return res.status(404).json({ message: 'User not found' });
         }
 
-        // Update user status to 'Deactivated'
         user.status = 'Deactivated';
         user.save()
           .then(() => {
@@ -479,7 +529,6 @@ app.get('/api/admin/reservations', async (req, res) => {
     }
   });
   
-  
 // Fetch all users (if needed for admin)
 app.get('/api/admin/users', (req, res) => {
 User.find({})
@@ -491,7 +540,6 @@ User.find({})
 app.delete('/api/admin/users/:id', async (req, res) => {
     try {
       const userId = req.params.id;
-      // Perform delete operation
       const result = await User.findByIdAndDelete(userId);
       
       if (!result) {
@@ -553,46 +601,38 @@ app.get('/api/home', (req, res) => {
 // Function to update reservation statuses
 async function updateReservationStatuses() {
   try {
-    // Get current date and time
     let now = new Date();
-    now.setHours(now.getHours() + 1); // Simulate timezone difference
-    // Fetch all reservations
+    now.setHours(now.getHours() + 1);
     const reservations = await Reservation.find({});
 
-    // Loop through reservations and update their status
     for (const reservation of reservations) {
       if (!reservation.userId) {
-        continue; // Skip if userId is missing
+        continue;
       }
 
-      // Skip reservations that are already cancelled
       if (reservation.status === 'Cancelled') {
         continue;
       }
 
-      // Check if required fields are present
       if (!reservation.startDate || !reservation.endDate) {
-        continue; // Skip if startDate or endDate is missing
+        continue;
       }
 
       const startDate = new Date(reservation.startDate);
       let endDate = new Date(reservation.endDate);
 
-      // Adjust endDate if it's earlier than startDate
       if (endDate < startDate) {
         endDate.setDate(endDate.getDate() + 1);
       }
 
-      // Update the status based on current date and time
       if (now > endDate) {
-        reservation.status = 'Completed'; // After the reservation ends
+        reservation.status = 'Completed';
       } else if (now >= startDate && now <= endDate) {
-        reservation.status = 'In Progress'; // During the reservation period
+        reservation.status = 'In Progress';
       } else if (now < startDate) {
-        reservation.status = 'Pending'; // Before the reservation starts
+        reservation.status = 'Pending';
       }
 
-      // Save the updated reservation
       await reservation.save();
     }
     console.log('Reservation statuses updated successfully.');
@@ -622,7 +662,7 @@ app.post('/api/admin/update-statuses', async (req, res) => {
   }
 });
 
-const moment = require('moment'); // Make sure to install moment.js for date manipulations
+const moment = require('moment');
 
 // Route to Update reservation
 app.put('/api/reservations/:id', async (req, res) => {
@@ -631,33 +671,27 @@ app.put('/api/reservations/:id', async (req, res) => {
 
   console.log('PUT request received:', { id, startDate, startTime, endDate, endTime });
 
-  // Function to normalize time format to HH:mm
   const normalizeTime = (time) => {
     const parts = time.split(':');
     if (parts.length === 2) {
       return `${parts[0].padStart(2, '0')}:${parts[1].padStart(2, '0')}`;
     }
-    return time; // or handle errors if time format is invalid
+    return time;
   };
 
-  // Normalize times
   startTime = normalizeTime(startTime);
   endTime = normalizeTime(endTime);
 
-  // Log normalized times
   console.log('Normalized start time:', startTime);
   console.log('Normalized end time:', endTime);
 
-  // Parse dates and times
   const now = moment();
   const startDateTime = moment(`${startDate}T${startTime}`);
   const endDateTime = moment(`${endDate}T${endTime}`);
 
-  // Log parsed date times
   console.log('Parsed start date/time:', startDateTime.format());
   console.log('Parsed end date/time:', endDateTime.format());
 
-  // Validate dates and times
   if (!startDateTime.isValid() || !endDateTime.isValid()) {
     return res.status(400).json({ message: 'Invalid date or time format.' });
   }
@@ -696,7 +730,7 @@ app.put('/api/reservations/:id/cancel', async (req, res) => {
       return res.status(404).send('Reservation not found');
     }
 
-    reservation.status = 'Cancelled';  // Or any other status you want to use for cancellation
+    reservation.status = 'Cancelled';
     await reservation.save();
 
     res.status(200).send('Reservation cancelled');
@@ -704,7 +738,6 @@ app.put('/api/reservations/:id/cancel', async (req, res) => {
     res.status(500).send('Error cancelling reservation');
   }
 });
-
 
 // Serve React app for any other requests
 app.get('*', (req, res) => {

@@ -29,7 +29,7 @@ function Profile() {
     startTime: new Date(),
     endTime: new Date(),
   });
-  const [showDialog, setShowDialog] = useState(false); // Moved to top-level state
+  const [showDialog, setShowDialog] = useState(false); 
   const [noReservations, setNoReservations] = useState(false);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function Profile() {
                 (reservation) => reservation.userId
               );
               setReservations(filteredReservations);
-              setNoReservations(filteredReservations.length === 0); // Check if there are no reservations
+              setNoReservations(filteredReservations.length === 0);
             })
             .catch((error) => {
               console.error('Error fetching reservations:', error);
@@ -297,8 +297,7 @@ function Profile() {
         </>
       );
     } else {
-      // For any status other than "Pending"
-      return <span>No actions possible</span>; // Or any synonym like "Actions not available"
+      return <span>No actions possible</span>;
     }
   }
 

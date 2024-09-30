@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import styles from './admin.module.css'; // Import the CSS Module
-
+import styles from './admin.module.css';
 function Admin() {
   const [reservations, setReservations] = useState([]);
   const [users, setUsers] = useState([]);
@@ -9,13 +8,13 @@ function Admin() {
   const [error, setError] = useState(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [deleteType, setDeleteType] = useState(null); // 'reservation' or 'user'
+  const [deleteType, setDeleteType] = useState(null);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem('token'); // Get the token from local storage
+      const token = localStorage.getItem('token');
     
       try {
         const [reservationsResponse, usersResponse] = await Promise.all([
@@ -75,7 +74,7 @@ function Admin() {
         return `${durationMins} minute(s)`;
       }
   
-      return '0 minutes'; // In case duration is zero
+      return '0 minutes';
     }
     return '';
   };
@@ -132,7 +131,7 @@ function Admin() {
   }; 
   
   const confirmDelete = async () => {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+    const token = localStorage.getItem('token');
   
     try {
       if (deleteType === 'reservation') {
@@ -176,7 +175,7 @@ function Admin() {
               <tr>
                 <th>ID</th>
                 <th>VM Name</th>
-                <th>Username</th> {/* Added Username Column */}
+                <th>Username</th>
                 <th>Status</th>
                 <th className={styles.startDate}>Start Date</th>
                 <th className={styles.endDate}>End Date</th>
@@ -190,7 +189,7 @@ function Admin() {
                 <tr key={reservation._id}>
                   <td>{reservation._id}</td>
                   <td>{reservation.vmName}</td>
-                  <td>{getUserById(reservation.userId)}</td> {/* Displaying Username */}
+                  <td>{getUserById(reservation.userId)}</td>
                   <td>{reservation.status}</td>
                   <td className={styles.startDate}>{formatDateTime(reservation.startDate, reservation.startTime)}</td>
                   <td className={styles.endDate}>{formatDateTime(reservation.endDate, reservation.endTime)}</td>

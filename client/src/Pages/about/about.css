@@ -31,7 +31,7 @@ body, html {
   padding: 50px;
   max-width: 1000px;
   margin: 20px auto;
-  background: rgba(255, 255, 255, 1);
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 15px;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
   border: 1px solid #007bff;
@@ -40,7 +40,6 @@ body, html {
   justify-content: center;
   transform: scale(1);
   transition: transform 0.3s ease-in-out;
-  box-shadow: #222;
 }
 
 .about-container:hover {
@@ -80,27 +79,33 @@ body, html {
   padding-bottom: 8px;
 }
 
+.about-values ul {
+  list-style-type: none;
+  padding: 0;
+}
+
 .about-values li {
   position: relative;
-  padding-left: 35px;
+  display: flex;
+  align-items: center;
   margin-bottom: 20px;
   font-size: 1.2rem;
   color: #555;
   transition: all 0.3s ease;
+  padding-left: 40px;
 }
 
 .about-values li:hover {
   background-color: rgba(0, 123, 255, 0.1);
   color: #007bff;
-  transform: translateX(10px); /* Slight movement effect */
+  transform: translateX(10px);
 }
 
-.about-values li::before {
-  content: '✔';
+.value-icon {
   color: #007bff;
+  font-size: 1.4rem;
   position: absolute;
   left: 0;
-  font-size: 1.4rem;
 }
 
 @keyframes fadeInUp {

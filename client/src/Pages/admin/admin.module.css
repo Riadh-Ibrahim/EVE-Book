@@ -1,5 +1,5 @@
 .body {
-  background: linear-gradient(135deg, #003366, #003c8f); /* Dark blue gradient */
+  background: linear-gradient(135deg, #003366, #003c8f);
   font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
@@ -19,8 +19,8 @@
   border: 1px solid rgba(255, 255, 255, 0.888);
   max-width: 1500px;
   width: 100%;
-  margin-left: 100px; /* Add margin to shift right */
-  margin-top: 30px; /* Add margin to shift right */
+  margin-left: 100px;
+  margin-top: 30px;
 }
 
 .adminDashboard h1 {
@@ -75,12 +75,12 @@
 }
 
 .adminTable th, .adminTable td {
-  padding: 5px 8px; /* Reduced padding */
+  padding: 5px 8px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 12px;
   color: #2c3e50;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  text-align: center; /* Ensure alignment for smaller padding */
+  text-align: center; 
 }
 
 .adminTable th {
@@ -89,15 +89,15 @@
   text-transform: uppercase;
   font-weight: 600;
   text-align: center;
-  font-size: 14px; /* Adjusted font size */
+  font-size: 14px; 
 }
 
 .adminTable td {
-  font-size: 14px; /* Adjusted font size */
-  max-height: 50px; /* Limit height of table cells */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
-  white-space: nowrap; /* Prevent text wrapping */
+  font-size: 14px;
+  max-height: 50px; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .adminTable tr:hover td {
@@ -140,21 +140,21 @@
 }
 
 .confirmationDialogButton.confirm {
-  background-color: #2980b9; /* Blue background */
+  background-color: #2980b9;
   color: #fff;
 }
 
 .confirmationDialogButton.confirm:hover {
-  background-color: #1f6391; /* Darker blue */
+  background-color: #1f6391;
 }
 
 .confirmationDialogButton.cancel {
-  background-color: #e74c3c; /* Red background */
+  background-color: #e74c3c;
   color: #fff;
 }
 
 .confirmationDialogButton.cancel:hover {
-  background-color: #c0392b; /* Darker red */
+  background-color: #c0392b;
 }
 
 .successNotification {
@@ -218,8 +218,8 @@
 }
 
 .deleteButton {
-  background-color: #e74c3c; /* Red background */
-  color: #fff; /* White text */
+  background-color: #e74c3c; 
+  color: #fff; 
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
@@ -228,7 +228,7 @@
 }
 
 .deleteButton:hover {
-  background-color: #c0392b; /* Darker red */
+  background-color: #c0392b;
 }
 
 .deleteButton:focus {

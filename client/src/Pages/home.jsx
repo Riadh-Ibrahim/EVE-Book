@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from 'react-calendar';
 import TimePicker from 'react-time-picker';
-import { FaClock, FaMoon, FaSun } from 'react-icons/fa'; // Added icons for theme toggle
+import { FaClock, FaMoon, FaSun } from 'react-icons/fa';
 import 'react-calendar/dist/Calendar.css';
 import 'react-time-picker/dist/TimePicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,7 +21,7 @@ function Home() {
   const [alertMessage, setAlertMessage] = useState('');
   const [data, setData] = useState(null);
   const [apiError, setApiError] = useState(null);
-  const [isDarkTheme, setIsDarkTheme] = useState(false); // New state for theme
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +47,42 @@ function Home() {
 
   const currentTime = new Date();
   const isToday = startDate.toDateString() === currentTime.toDateString();
+
+const checkStartDateConflict = async (start) => {
+  try {
+      const response = await axios.get('http://localhost:3001/api/check-start-date', {
+          params: { start },
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+      });
+
+      console.log('Start date conflict status:', response.data.conflict); 
+      return response.data.conflict;
+  } catch (error) {
+      console.error('Error checking start date:', error);
+      setAlertMessage('Error checking start date reservation status.');
+      return false;
+  }
+};
+
+const checkEndDateConflict = async (start, end) => {
+    try {
+        const response = await axios.get('http://localhost:3001/api/check-end-date', {
+            params: { start, end },
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        console.log('End date conflict status:', response.data.conflict); 
+        return response.data.conflict;
+    } catch (error) {
+        console.error('Error checking end date:', error);
+        setAlertMessage('Error checking end date reservation status.');
+        return false;
+    }
+};
 
   const handleStartDateChange = (newDate) => {
     setStartDate(newDate);
@@ -99,14 +135,38 @@ function Home() {
     }
   };
 
-  const handleNextStep = () => {
+  
+  const [hasConflict, setHasConflict] = useState(false);
+
+  const handleNextStep = async () => {
     if (!startTime) {
-      setAlertMessage('Please select a valid start time.');
-      return;
+        setAlertMessage('Please select a valid start time.');
+        return;
     }
-    setStep(2);
+
+    const start = new Date(startDate);
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    start.setHours(startHour, startMinute);
+
+    start.setHours(start.getHours() + 1); 
+
+    const end = new Date(start);
+    end.setHours(end.getHours() + 1); 
+
+    console.log('Checking start date conflict...');
+    console.log('Start:', start.toISOString());
+    console.log('End:', end.toISOString());
+
+    const conflict = await checkStartDateConflict(start.toISOString());
+
+    if (conflict) {
+        setAlertMessage('This start time is already reserved. Please select another time.');
+        return;
+    }
+
+    setStep(2); 
     setAlertMessage('');
-  };
+};
 
   const handlePreviousStep = () => {
     setStep(1);
@@ -151,49 +211,77 @@ function Home() {
 
   const handleConfirm = async () => {
     if (!vmName) {
-      setAlertMessage('Please enter a VM name.');
-      return;
+        setAlertMessage('Please enter a VM name.');
+        return;
     }
-  
-    if (isSubmitting) return; // Prevent multiple submissions
-  
-    setIsSubmitting(true); // Set submitting state to true
-  
+
+    const start = new Date(startDate);
+    const [startHour, startMinute] = startTime.split(':').map(Number);
+    start.setHours(startHour, startMinute);
+
+    // Add 1 hour to the selected start time
+    start.setHours(start.getHours() + 1);
+
+    const end = new Date(start);
+    if (endDate && endTime) {
+        const [endHour, endMinute] = endTime.split(':').map(Number);
+        end.setFullYear(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+        end.setHours(endHour, endMinute);
+
+        // Add 1 hour to the end time
+        end.setHours(end.getHours() + 1);
+    } else {
+        end.setHours(start.getHours() + 1);  // Add 1 more hour for the default end time
+    }
+
+    console.log('Checking end date conflict...');
+    console.log('Start:', start.toISOString());
+    console.log('End:', end.toISOString());
+
+    const conflict = await checkEndDateConflict(start.toISOString(), end.toISOString());
+
+    if (conflict) {
+        setAlertMessage('This time slot is already reserved. Please select another time.');
+        return;
+    }
+
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const reservationData = {
-      vmName,
-      status: 'Pending',
-      startDate,
-      startTime,
-      endDate,
-      endTime,
-      duration,
+        vmName,
+        status: 'Pending',
+        startDate,
+        startTime,
+        endDate,
+        endTime,
+        duration,
     };
-  
-    // Redirect to loading page
+
     navigate('/loading', { state: { reservationData } });
-  
+
     try {
-      const response = await fetch('http://localhost:3001/api/execute-ansible', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-        body: JSON.stringify(reservationData),
-      });
-  
-      const result = await response.json();
-  
-      if (!result.success) {
-        setAlertMessage(result.message);
-      }
+        const response = await fetch('http://localhost:3001/api/execute-ansible', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(reservationData),
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            setAlertMessage(result.message);
+        }
     } catch (error) {
-      console.error('Error:', error);
-      setAlertMessage('An error occurred while processing your reservation.');
+        console.error('Error:', error);
+        setAlertMessage('An error occurred while processing your reservation.');
     } finally {
-      setIsSubmitting(false); // Reset submitting state
+        setIsSubmitting(false);
     }
-  };  
+};
 
   const backgroundContainerStyle = {
     position: 'absolute',
@@ -206,7 +294,7 @@ function Home() {
     backgroundPosition: 'center',
     filter: 'blur(8px)',
     zIndex: -1,
-    backgroundColor: isDarkTheme ? '#333' : '#fff', // Background color based on theme
+    backgroundColor: isDarkTheme ? '#333' : '#fff',
   };
 
   const contentContainerStyle = {
@@ -215,9 +303,9 @@ function Home() {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     padding: '40px 30px',
-    backgroundColor: isDarkTheme ? 'rgba(50, 50, 50, 0.95)' : 'rgba(255, 255, 255, 0.95)', // Adjust based on theme
+    backgroundColor: isDarkTheme ? 'rgba(50, 50, 50, 0.95)' : 'rgba(255, 255, 255, 0.95)',
     borderRadius: '12px',
-    boxShadow: isDarkTheme ? '0 8px 16px rgba(0, 0, 0, 0.8)' : '0 8px 16px rgba(0, 0, 0, 0.2)', // Adjust shadow based on theme
+    boxShadow: isDarkTheme ? '0 8px 16px rgba(0, 0, 0, 0.8)' : '0 8px 16px rgba(0, 0, 0, 0.2)',
     maxWidth: '700px',
     width: '90%',
     textAlign: 'center',
@@ -227,17 +315,17 @@ function Home() {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: isDarkTheme ? '#444' : '#f8f9fa', // Background color based on theme
-    border: isDarkTheme ? '1px solid #555' : '1px solid #dee2e6', // Border color based on theme
+    backgroundColor: isDarkTheme ? '#444' : '#f8f9fa',
+    border: isDarkTheme ? '1px solid #555' : '1px solid #dee2e6',
     borderRadius: '10px',
     padding: '20px',
-    boxShadow: isDarkTheme ? '0 6px 12px rgba(0, 0, 0, 0.5)' : '0 6px 12px rgba(0, 0, 0, 0.15)', // Adjust shadow based on theme
+    boxShadow: isDarkTheme ? '0 6px 12px rgba(0, 0, 0, 0.5)' : '0 6px 12px rgba(0, 0, 0, 0.15)',
     margin: 'auto',
   };
 
   const headingStyle = {
     fontFamily: "'Poppins', sans-serif",
-    color: isDarkTheme ? '#ddd' : '#333', // Text color based on theme
+    color: isDarkTheme ? '#ddd' : '#333',
     fontSize: '2rem',
     fontWeight: '600',
     marginBottom: '20px',
@@ -245,7 +333,7 @@ function Home() {
 
   const buttonStyle = {
     marginTop: '20px',
-    backgroundColor: isDarkTheme ? '#444' : '#0062cc', // Button color based on theme
+    backgroundColor: isDarkTheme ? '#444' : '#0062cc',
     color: '#fff',
     borderRadius: '50px',
     padding: '10px 30px',
@@ -258,7 +346,7 @@ function Home() {
 
   const clockIconStyle = {
     marginLeft: '10px',
-    color: isDarkTheme ? '#ddd' : '#0062cc', // Icon color based on theme
+    color: isDarkTheme ? '#ddd' : '#0062cc',
     verticalAlign: 'middle',
   };
 
@@ -268,7 +356,6 @@ function Home() {
     marginTop: '20px',
   };
 
-  // Toggle theme function
   const toggleTheme = () => {
     setIsDarkTheme(prevTheme => !prevTheme);
   };
@@ -309,6 +396,7 @@ function Home() {
                 <button
                   style={buttonStyle}
                   onClick={handleNextStep}
+                  disabled={hasConflict}
                 >
                   Next
                 </button>
@@ -330,6 +418,7 @@ function Home() {
                   value={endTime}
                   disableClock
                   format="HH:mm"
+                  minTime={startTime}
                 />
               </div>
               <div className="mt-3">
@@ -342,7 +431,7 @@ function Home() {
                     width: '100%',
                     padding: '10px',
                     borderRadius: '5px',
-                    border: isDarkTheme ? '1px solid #555' : '1px solid #ccc', // Border color based on theme
+                    border: isDarkTheme ? '1px solid #555' : '1px solid #ccc',
                   }}
                 />
               </div>
@@ -371,7 +460,6 @@ function Home() {
           )}
         </div>
 
-        {/* Theme toggle button */}
         <button
           onClick={toggleTheme}
           style={{

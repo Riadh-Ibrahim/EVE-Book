@@ -1,18 +1,18 @@
 .features-page {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh; /* Ensure the page fills the viewport height */
-    background-color: #f8f9f9; /* Light background for better contrast */
-  }
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f8f9f9;
+}
+
 .features-container {
-  flex: 1; /* Allow the container to grow and fill the available space */
-  padding: 40px;
+  flex: 1;
+  padding: 60px;
   max-width: 1300px;
   margin: 10px auto;
-  background-color: #e8e8ee; /* White background for content */
-  border-radius: 8px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .features-title {
@@ -20,54 +20,78 @@
   font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
-  color: #333;
+  color: #333333;
 }
 
 .features-intro {
   font-size: 1.2rem;
-  color: #666;
+  color: #666666;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 50px;
   line-height: 1.6;
 }
 
 .features-content {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 30px;
   justify-content: center;
 }
 
 .feature-item {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-  width: 380px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 30px;
+  width: 370px;
   text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-item:hover {
-  transform: translateY(-15px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-10px);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.1);
 }
 
 .feature-icon {
-  font-size: 2.5rem;
-  color: #007bff; /* Primary color for icons */
-  margin-bottom: 15px;
+  font-size: 2.8rem;
+  color: #007bff;
+  margin-bottom: 20px;
 }
 
 .feature-item h2 {
   font-size: 1.6rem;
-  margin-bottom: 10px;
-  color: #333;
+  margin-bottom: 12px;
+  color: #333333;
 }
 
 .feature-item p {
-  font-size: 1rem;
-  color: #555;
+  font-size: 1.1rem;
+  color: #555555;
+  line-height: 1.5;
 }
-  
+
+@media (max-width: 992px) {
+  .features-container {
+    padding: 40px;
+  }
+
+  .feature-item {
+    width: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .features-container {
+    padding: 30px;
+  }
+
+  .features-title {
+    font-size: 2.4rem;
+  }
+
+  .feature-item {
+    width: 100%;
+  }
+}
