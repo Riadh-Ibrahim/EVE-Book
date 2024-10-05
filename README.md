@@ -49,6 +49,17 @@ This VM reservation module allows users to book virtual machines (VMs) from an o
      ANSIBLE_PLAYBOOK_PATH=/root/ansible/playbooks/create_vm.yml
      ```
 
+   - In the index.js file, go to the "Route to execute ansible script" and in this line : "const remoteHost = '192.168.23.133';" change the remote host by your EVE-NG IP address.
+
+   - Go to MongoDBCompass and create a local DataBase and name it "EVE-book".
+
+   - In the index.js file, update this part :
+         mongoose.connect("mongodb://127.0.0.1:27017/EVE-Book", {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+        });
+     with your local DataBase IP address and port.
+     
 3. **Configure the frontend** :
 
    - Navigate to the `client` directory and install the dependencies:
@@ -63,21 +74,27 @@ This VM reservation module allows users to book virtual machines (VMs) from an o
 4. **Configure Ansible** :
 
    - Ensure that the `Ansible` script for VM creation is correctly configured and accessible. Check the connection settings to EVE-NG and the disk image paths.
-
+   - Here all the steps :
+    1. Ensure you have EVE-NG installed under VMware.
+    2. Execute this command to create the file: "nano /root/ansible/playbooks/create_vm.yml"
+    3. Paste the existing Ansible script (You can find it under the directory ansible inside this repository) in the create_vm.yml file then save the changes.
+    4. You will find all needed files and requirements inside the ansible script so follow it step by step to know where to put each requirement (vm_image,  qemu_dir,  qemu_image, ...).
+    5. To ensure everthing is ok with your ansible script run this command :  "ansible-playbook -i /root/ansible/templates/inventory.ini /root/ansible/playbooks/create_vm.yml". This should create a lab in your EVE-NG envorinment, so go         to the EVE-NG web interface and check if there is a newly created lab, if so, then your ansible configuration is ok.
+       
 5. **Start the Server** :
-
+    In your IDE, browse to the EVE-BOOK project directory, then run the 2 following commands :
    - Start the backend :
 
      ```bash
-     cd ../api
+     cd api
      npm start
      ```
 
    - Start the frontend :
 
      ```bash
-     cd ../client
-     npm start
+     cd client
+     npm run dev
      ```
 
 # 🔧 Usage
@@ -85,7 +102,7 @@ This VM reservation module allows users to book virtual machines (VMs) from an o
 1. **Access the web interface**: Open your browser and go to `http://localhost:5173`.
 2. **Create and access your user account.**
 
-3. **Reserve a VM**:
+3. **Reserve a lab**:
    - Select the start and end dates and times for the reservation.
    - Click on "Confirm" to finalize the reservation.
 
