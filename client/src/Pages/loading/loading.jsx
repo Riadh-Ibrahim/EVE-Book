@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import styles from './loading.module.css'; // Import CSS Module
-import Navbar from '../../Components/Navbar/navbar'; // Adjust the path as needed
+import styles from './loading.module.css';
+import Navbar from '../../Components/Navbar/navbar';
 
 const Loading = () => {
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ const Loading = () => {
 
   return (
     <div>
-      <Navbar /> {/* Include the Navbar here */}
+      <Navbar />
       <div className={styles.container}>
         {loading && (
           <div className={styles.loadingContainer}>

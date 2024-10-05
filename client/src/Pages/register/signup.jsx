@@ -11,7 +11,6 @@ function Signup() {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
     const navigate = useNavigate();
 
-    // Dynamic text effect
     const words = ["topologies", "simulations"];
     const [dynamicWord, setDynamicWord] = useState(words[0]);
     const [fadeClass, setFadeClass] = useState('show');
@@ -22,17 +21,17 @@ function Signup() {
         window.addEventListener('resize', handleResize);
 
         const intervalId = setInterval(() => {
-            setFadeClass('hide'); // Start fade out
+            setFadeClass('hide');
             setTimeout(() => {
                 setDynamicWord(prevWord => {
                     const currentIndex = words.indexOf(prevWord);
                     const nextIndex = (currentIndex + 1) % words.length;
                     return words[nextIndex];
                 });
-                setFadeClass('show'); // Start fade in
-            }, 500); // Match this duration to the CSS transition time
+                setFadeClass('show');
+            }, 500);
 
-        }, 2000); // Change every 2 seconds
+        }, 2000);
 
         return () => {
             clearInterval(intervalId);

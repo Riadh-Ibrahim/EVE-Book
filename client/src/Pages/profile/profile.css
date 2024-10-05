@@ -1,6 +1,3 @@
-/* profile.css */
-
-/* General Styles */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -34,7 +31,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Darker overlay for better contrast */
+  background: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
 
@@ -44,17 +41,17 @@ body {
   overflow: auto;
   padding: 20px;
   position: relative;
-  z-index: 1; /* Ensure content is above background */
+  z-index: 1;
 }
 
 .profile-left {
-  flex: 0 0 65%; /* Set width to 65% */
+  flex: 0 0 65%;
   padding: 20px;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   border-right: 1px solid #ddd;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Increased shadow depth and opacity */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   overflow-y: auto;
   overflow-x: auto;
@@ -62,59 +59,56 @@ body {
 
 .profile-right {
   margin-left: 10px;
-  flex: 0 0 35%; /* Set width to 35% */
+  flex: 0 0 35%;
   padding: 20px;
   box-sizing: border-box;
-  background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 8px;
   border-left: 1px solid #ddd;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3); /* Increased shadow depth and opacity */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
 }
 
 .profile-left.no-reservations {
-  flex: 0 0 35%; /* Width when no reservations */
+  flex: 0 0 35%; 
 }
 
 .profile-right.no-reservations {
-  flex: 0 0 65%; /* Width when no reservations */
-  margin-left: 0; /* Remove margin-left when no reservations */
+  flex: 0 0 65%;
+  margin-left: 0;
 }
 .profile-left:hover, .profile-right:hover {
-  transform: scale(1.015); /* Slightly increase size on hover */
-  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.4); /* Make shadow a bit larger and darker on hover */
+  transform: scale(1.015);
+  box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.4);
 }
 
 h1 {
   margin-top: 0;
-  font-size: 32px; /* Increased size for better visibility */
+  font-size: 32px;
   color: #fff;
 }
 
 h2 {
   margin-top: 0;
-  font-size: 28px; /* Increased size for better visibility */
+  font-size: 28px;
   color: #eee;
 }
 
-/* Profile Update Title */
 .update-title {
   font-size: 28px;
   margin-bottom: 20px;
-  color: #2196F3; /* Set a color that suits your design */
-  border-bottom: 2px solid #2196F3; /* Blue underline for emphasis */
+  color: #2196F3;
+  border-bottom: 2px solid #2196F3;
   padding-bottom: 10px;
-  text-align: center; /* Center the title */
+  text-align: center;
 }
 
-/* Reservations Title */
 .reservations-title {
   font-size: 28px;
-  color: #2196F3; /* Change to desired color */
-  text-align: center; /* Center the title */
+  color: #2196F3;
+  text-align: center;
 }
 
-/* Edit Button Position */
 .input-group {
   display: flex;
   align-items: center;
@@ -122,32 +116,27 @@ h2 {
 
 .input-group input {
   flex: 1;
-  margin-right: 10px; /* Space between input and button */
+  margin-right: 10px;
 }
 
-/* Match the Edit button height to the input field */
 .input-group button {
-  height: 100%; /* Make the button take up the full height of the input field */
-  margin: 10px; /* Remove any margin */
-  padding: 12px; /* Ensure padding is consistent */
-  align-self: stretch; /* Ensures the button stretches to match the input height */
+  height: 100%;
+  margin: 10px;
+  padding: 12px;
+  align-self: stretch;
   display: inline-block;
 }
 
-
-/* Deactivate Button */
 .deactivate-button {
   background-color: #f44336;
-  margin-top: 20px; /* Add space below the submit button */
+  margin-top: 20px;
   margin-left: 75px;
-  width: 75%; /* Make the button full width if desired */
+  width: 75%;
   padding: 12px;
   font-size: 18px;
   border-radius: 8px;
 }
 
-
-/* Reservations Table */
 .reservations-table {
   overflow-x: auto;
 }
@@ -155,7 +144,7 @@ h2 {
 .reservations-table table {
   width: 100%;
   border-collapse: collapse;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Added shadow */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .reservations-table th, .reservations-table td {
@@ -174,49 +163,47 @@ h2 {
   color: #fff;
 }
 
-/* Buttons */
 .profile button {
   border: none;
   padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 8px; /* More rounded for a modern look */
+  border-radius: 8px;
   color: #fff;
   transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-  transform: scale(1.05); /* Slight zoom effect on hover */
+  transform: scale(1.05);
   background-color: #d4cddb;
 }
 
 .button-container {
-  display: flex; /* Align children inline */
-  gap: 8px; /* Space between buttons */
-  overflow: hidden; /* Prevent buttons from overflowing */
-  justify-content: flex-start; /* Align buttons to the start */
-  padding: 4px; /* Add some padding around buttons */
+  display: flex; 
+  gap: 8px; 
+  overflow: hidden; 
+  justify-content: flex-start; 
+  padding: 4px;
 }
 
 .button-edit, .button-delete {
-  font-size: 12px; /* Smaller text size */
-  padding: 4px 8px; /* Smaller padding */
-  margin: 0 4px; /* Space between buttons */
-  display: inline-block; /* Ensure buttons are in the same line */
-  border: none; /* Remove default border */
-  color: white; /* Text color for visibility */
-  border-radius: 4px; /* Rounded corners for aesthetics */
-  text-align: center; /* Center text inside button */
+  font-size: 12px;
+  padding: 4px 8px;
+  margin: 0 4px;
+  display: inline-block;
+  border: none;
+  color: white; 
+  border-radius: 4px;
+  text-align: center;
 }
 
 .button-edit {
-  background-color: #4CAF50; /* Green background */
+  background-color: #4CAF50;
 }
 
 .button-delete {
-  background-color: #f44336; /* Red background */
+  background-color: #f44336;
 }
-
 
 .submit-button {
   background-color: #2196F3;
@@ -229,7 +216,6 @@ button:hover {
   background-color: #f44336;
 }
 
-/* Form */
 .form-group {
   margin-bottom: 20px;
 }
@@ -259,14 +245,12 @@ button:hover {
   margin-left: 10px;
 }
 
-/* Messages */
 .message {
   color: #f44336;
   font-size: 16px;
   margin-top: 10px;
 }
 
-/* Dialogs */
 .confirmation-dialog, .edit-dialog {
   position: fixed;
   top: 50%;
@@ -299,7 +283,6 @@ button:hover {
   margin-top: 5px;
 }
 
-/* Navbar */
 .profile-navbar {
   position: absolute;
   top: 0;
@@ -339,9 +322,9 @@ button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Darker overlay for better contrast */
-  backdrop-filter: blur(5px); /* Apply blur effect */
-  z-index: 1000; /* Ensure it is below the dialog box */
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
 }
 
 .dialog-content {
@@ -362,8 +345,6 @@ button:hover {
   background-color: #d32f2f;
 }
 
-
-/* Dialog Styling */
 .edit-dialog {
   position: fixed;
   top: 50%;
@@ -374,21 +355,21 @@ button:hover {
   border: 1px solid #ddd;
   border-radius: 8px;
   box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.2);
-  z-index: 1001; /* Ensure it is above the overlay */
+  z-index: 1001;
 }
 
 .edit-dialog h3 {
   text-align: center;
-  color: #2196F3; /* Blue color for the title */
+  color: #2196F3;
   margin-bottom: 20px;
-  font-size: 24px; /* Adjust font size if needed */
+  font-size: 24px;
 }
 
 .edit-dialog label {
   display: block;
   margin-bottom: 10px;
   font-weight: bold;
-  color: #333; /* Dark color for labels */
+  color: #333;
 }
 
 .edit-dialog .input-group {
@@ -408,19 +389,19 @@ button:hover {
 }
 
 .edit-dialog button:first-of-type {
-  background-color: #4CAF50; /* Green for Confirm button */
+  background-color: #4CAF50;
   margin-right: 15px;
   margin-left: 40px;
 }
 
 .edit-dialog button:first-of-type:hover {
-  background-color: #388E3C; /* Darker green on hover */
+  background-color: #388E3C;
 }
 
 .edit-dialog button:last-of-type {
-  background-color: #f44336; /* Red for Cancel button */
+  background-color: #f44336;
 }
 
 .edit-dialog button:last-of-type:hover {
-  background-color: #d32f2f; /* Darker red on hover */
+  background-color: #d32f2f;
 }

@@ -53,7 +53,7 @@ const Contact = () => {
     const handleSendAnother = () => {
         console.log("Sending another message");
         setModalVisible(false);
-        form.current.reset(); // Reset the form if needed
+        form.current.reset();
     };
 
     return (

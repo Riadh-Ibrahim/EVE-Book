@@ -1,23 +1,20 @@
-/* Container for full-width background and center content */
 .container-wrapper {
     max-width: 1130px;
     margin: 80px auto;
     padding: 6rem ;
-    background-color: #c8d2dd; /* Background color */
-    border-radius: 10px; /* Rounded corners */
+    background-color: #c8d2dd;
+    border-radius: 10px;
 }
 
 .sign-in-text {
     color: black;
 }  
 
-/* Flex container for left and right sections */
 .d-flex {
     display: flex;
     flex-wrap: nowrap;
 }
 
-/* Left side form styling */
 .w-45 {
     width: 45%;
 }
@@ -30,14 +27,13 @@
     max-width: 350px;
 }
 
-/* Right side styling */
 .right-column {
     background: url('../../assets/logo.png') no-repeat center center;
     background-size: cover;
     padding: 2rem;
     text-align: center;
     position: relative;
-    width: 55%; /* Ensure proper width */
+    width: 55%;
 
 }
 
@@ -65,33 +61,31 @@
     color: floralwhite;
 }
 
-/* Media query for screen widths less than 900px */
 @media (max-width: 699px) {
     .right-column {
-        display: none; /* Hide the right column on smaller screens */
+        display: none;
     }
 
     .w-45 {
-        width: 100%; /* Ensure left side takes full width */
+        width: 100%;
     }
 
     .form-container {
-        max-width: 100%; /* Ensure the form container takes full width */
+        max-width: 100%;
     }
 }
 
-/* Dynamic text effect */
 .dynamic-word {
     color: #dba754;
     font-weight: bold;
     opacity: 0;
-    transition: opacity 0.5s ease-in-out; /* Smooth fade transition */
+    transition: opacity 0.5s ease-in-out;
 }
 
 .dynamic-word.show {
-    opacity: 1; /* Fade in effect */
+    opacity: 1;
 }
 
 .dynamic-word.hide {
-    opacity: 0; /* Fade out effect */
+    opacity: 0;
 }

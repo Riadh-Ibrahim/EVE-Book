@@ -532,7 +532,6 @@ function Profile() {
             <button onClick={cancelEdit}>Cancel</button>
           </div>
         )}
-      {/* Deactivate Account Confirmation Dialog */}
       {showDialog && (
         <>
           <div className="confirmation-dialog-overlay"></div>

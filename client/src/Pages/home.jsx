@@ -219,7 +219,6 @@ const checkEndDateConflict = async (start, end) => {
     const [startHour, startMinute] = startTime.split(':').map(Number);
     start.setHours(startHour, startMinute);
 
-    // Add 1 hour to the selected start time
     start.setHours(start.getHours() + 1);
 
     const end = new Date(start);
@@ -228,10 +227,9 @@ const checkEndDateConflict = async (start, end) => {
         end.setFullYear(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
         end.setHours(endHour, endMinute);
 
-        // Add 1 hour to the end time
         end.setHours(end.getHours() + 1);
     } else {
-        end.setHours(start.getHours() + 1);  // Add 1 more hour for the default end time
+        end.setHours(start.getHours() + 1); 
     }
 
     console.log('Checking end date conflict...');

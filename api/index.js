@@ -24,72 +24,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/EVE-Book", {
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'build')));
 
-app.get('/api/check-start-date', async (req, res) => {
-  const { start } = req.query;
-
-  try {
-      const newStart = new Date(start);
-
-      if (isNaN(newStart.getTime())) {
-          return res.status(400).json({ conflict: false, message: 'Invalid start date.' });
-      }
-
-      const existingReservations = await Reservation.find();
-
-      const conflict = existingReservations.some(reservation => {
-          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
-          reservationStart.setHours(reservationStart.getHours() + 1); // Add 1 hour
-          
-          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
-          reservationEnd.setHours(reservationEnd.getHours() + 1); // Add 1 hour
-
-          const isOverlappingEntirely = newStart < reservationStart && newStart >= reservationEnd;
-          const isSameTime = newStart.getTime() === reservationStart.getTime();
-          const isContainedWithin = newStart > reservationStart && newStart < reservationEnd;
-          const isOverlappingPartially = newStart >= reservationStart && newStart <= reservationEnd;
-
-          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
-      });
-
-      res.json({ conflict });
-  } catch (error) {
-      console.error('Error checking start date conflict:', error);
-      res.status(500).json({ conflict: false, message: 'Error checking start date.' });
-  }
-});
-
-app.get('/api/check-end-date', async (req, res) => {
-  const { start, end } = req.query;
-
-  try {
-      const newStart = new Date(start);
-      const newEnd = new Date(end);
-
-      if (isNaN(newStart.getTime()) || isNaN(newEnd.getTime())) {
-          return res.status(400).json({ conflict: false, message: 'Invalid start or end date.' });
-      }
-
-      const existingReservations = await Reservation.find();
-
-      const conflict = existingReservations.some(reservation => {
-          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
-          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
-
-          const isOverlappingEntirely = newStart < reservationStart && newEnd > reservationEnd;
-          const isSameTime = newStart.getTime() === reservationStart.getTime() && newEnd.getTime() === reservationEnd.getTime();
-          const isContainedWithin = newStart > reservationStart && newEnd < reservationEnd;
-          const isOverlappingPartially = (newStart >= reservationStart && newStart <= reservationEnd) || 
-                                         (newEnd >= reservationStart && newEnd <= reservationEnd);
-
-          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
-      });
-
-      res.json({ conflict });
-  } catch (error) {
-      console.error('Error checking end date conflict:', error);
-      res.status(500).json({ conflict: false, message: 'Error checking end date.' });
-  }
-});
 
 // Register route
 app.post('/register', async (req, res) => {
@@ -178,6 +112,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+//Route to execute ansible script
 app.post('/api/execute-ansible', async (req, res) => {
   const { vmName, startDate, startTime, endDate, endTime } = req.body;
   const token = req.headers.authorization?.split(' ')[1];
@@ -736,6 +671,75 @@ app.put('/api/reservations/:id/cancel', async (req, res) => {
     res.status(200).send('Reservation cancelled');
   } catch (error) {
     res.status(500).send('Error cancelling reservation');
+  }
+});
+
+//Route to check start date conflicts
+app.get('/api/check-start-date', async (req, res) => {
+  const { start } = req.query;
+
+  try {
+      const newStart = new Date(start);
+
+      if (isNaN(newStart.getTime())) {
+          return res.status(400).json({ conflict: false, message: 'Invalid start date.' });
+      }
+
+      const existingReservations = await Reservation.find();
+
+      const conflict = existingReservations.some(reservation => {
+          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
+          reservationStart.setHours(reservationStart.getHours() + 1); // Add 1 hour
+          
+          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
+          reservationEnd.setHours(reservationEnd.getHours() + 1); // Add 1 hour
+
+          const isOverlappingEntirely = newStart < reservationStart && newStart >= reservationEnd;
+          const isSameTime = newStart.getTime() === reservationStart.getTime();
+          const isContainedWithin = newStart > reservationStart && newStart < reservationEnd;
+          const isOverlappingPartially = newStart >= reservationStart && newStart <= reservationEnd;
+
+          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
+      });
+
+      res.json({ conflict });
+  } catch (error) {
+      console.error('Error checking start date conflict:', error);
+      res.status(500).json({ conflict: false, message: 'Error checking start date.' });
+  }
+});
+
+//Route to check end date conflicts
+app.get('/api/check-end-date', async (req, res) => {
+  const { start, end } = req.query;
+
+  try {
+      const newStart = new Date(start);
+      const newEnd = new Date(end);
+
+      if (isNaN(newStart.getTime()) || isNaN(newEnd.getTime())) {
+          return res.status(400).json({ conflict: false, message: 'Invalid start or end date.' });
+      }
+
+      const existingReservations = await Reservation.find();
+
+      const conflict = existingReservations.some(reservation => {
+          const reservationStart = new Date(`${reservation.startDate.toISOString().split('T')[0]}T${reservation.startTime}`);
+          const reservationEnd = new Date(`${reservation.endDate.toISOString().split('T')[0]}T${reservation.endTime}`);
+
+          const isOverlappingEntirely = newStart < reservationStart && newEnd > reservationEnd;
+          const isSameTime = newStart.getTime() === reservationStart.getTime() && newEnd.getTime() === reservationEnd.getTime();
+          const isContainedWithin = newStart > reservationStart && newEnd < reservationEnd;
+          const isOverlappingPartially = (newStart >= reservationStart && newStart <= reservationEnd) || 
+                                         (newEnd >= reservationStart && newEnd <= reservationEnd);
+
+          return isOverlappingEntirely || isSameTime || isContainedWithin || isOverlappingPartially;
+      });
+
+      res.json({ conflict });
+  } catch (error) {
+      console.error('Error checking end date conflict:', error);
+      res.status(500).json({ conflict: false, message: 'Error checking end date.' });
   }
 });
 

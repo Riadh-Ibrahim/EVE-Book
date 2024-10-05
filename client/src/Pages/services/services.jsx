@@ -1,6 +1,6 @@
 import React from 'react';
 import './services.css';
-import Navbar from '../../Components/Navbar/navbar'; // Adjust the path as necessary
+import Navbar from '../../Components/Navbar/navbar';
 
 function Services() {
   return (

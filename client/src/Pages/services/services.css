@@ -2,18 +2,18 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(to right, #f5f7f9, #e3e4e8); /* Soft gradient background */
+    background: linear-gradient(to right, #f5f7f9, #e3e4e8);
   }
   
   .services-container {
     padding: 40px;
     max-width: 1200px;
     margin: 20px auto;
-    background: #ffffff; /* White background for content */
+    background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0; /* Light border for a subtle outline */
-    overflow-y: auto; /* Ensure content is scrollable if necessary */
+    border: 1px solid #e0e0e0; 
+    overflow-y: auto;
   }
   
   .services-title {
@@ -32,7 +32,7 @@
     display: block;
     width: 80px;
     height: 4px;
-    background-color: #007bff; /* Accent color */
+    background-color: #007bff;
     margin: 10px auto 0;
     border-radius: 2px;
   }
@@ -44,25 +44,25 @@
   }
   
   .service-item {
-    background: #ffffff; /* White background for each item */
+    background: #ffffff;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e0e0e0; /* Light border for each item */
+    border: 1px solid #e0e0e0;
     display: flex;
     align-items: center;
     gap: 20px;
-    transition: transform 0.6s ease, box-shadow 0.6s ease; /* Slower transition for hover effect */
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
   }
   
   .service-item:hover {
-    transform: scale(1.05); /* Slightly increase size on hover */
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   }
 
   .service-icon {
     font-size: 3rem;
-    color: #007bff; /* Accent color */
+    color: #007bff;
     flex-shrink: 0;
   }
   

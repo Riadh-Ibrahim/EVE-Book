@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import landing from '../assets/landing.png';
 import background from '../assets/background.jpg';
-import Navbar from '../Components/Navbar/navbar'; // Adjust the path as necessary
+import Navbar from '../Components/Navbar/navbar';
 
 const Landing = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 800);
@@ -19,7 +19,7 @@ const Landing = () => {
 
   return (
     <>
-      <Navbar /> {/* Include the Navbar here */}
+      <Navbar />
 
       <div 
         className="d-flex flex-column justify-content-center" 

@@ -1,4 +1,3 @@
-/* Contact Page */
 #contact-page {
     display: flex;
     flex-direction: column;
@@ -32,7 +31,7 @@
 }
 
 .contact-content:hover {
-    transform: scale(1.05); /* Scale the form slightly on hover */
+    transform: scale(1.05);
 }
 
 .contactPageTitle {
@@ -101,22 +100,20 @@
     }
 }
 
-/* Modal Overlay */
 #contact-page .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6); /* Dark background with some opacity */
-    backdrop-filter: blur(8px); /* Apply blur effect */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* Ensure it's above other content */
+    z-index: 9999;
 }
 
-/* Modal */
 #contact-page .modal {
     background: white;
     padding: 2rem;
@@ -126,19 +123,17 @@
     max-width: 400px;
     text-align: center;
     max-height: 25vh; 
-    overflow-y: auto; /* Add scroll if content overflows */
-    display: block; /* Ensure it's not hidden */
+    overflow-y: auto;
+    display: block;
     margin: 350px 650px;
 }
 
-/* Strong Message */
 #contact-page .modal .strong-message {
-    font-weight: bold; /* Make the text bold */
-    font-size: 1.2rem; /* Adjust font size if needed */
-    line-height: 1.5; /* Adjust line height for spacing between lines */
+    font-weight: bold; 
+    font-size: 1.2rem; 
+    line-height: 1.5;
 }
 
-/* Modal Buttons */
 #contact-page .modal-buttons {
     margin-top: 1rem;
     display: flex;
@@ -154,7 +149,6 @@
     font-size: 1rem;
 }
 
-/* OK Button */
 #contact-page .modal-buttons .ok-button {
     background-color: #283593;
     color: white;
@@ -164,7 +158,6 @@
     background-color: #3949ab;
 }
 
-/* Send Another Button */
 #contact-page .modal-buttons .send-another-button {
     background-color: #ff5722;
     color: white;
