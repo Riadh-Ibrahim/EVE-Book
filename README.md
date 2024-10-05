@@ -49,7 +49,7 @@ This VM reservation module allows users to book virtual machines (VMs) from an o
      ANSIBLE_PLAYBOOK_PATH=/root/ansible/playbooks/create_vm.yml
      ```
 
-     - In the index.js file, got to the "Route to execute ansible script" and in this line : "const remoteHost = '192.168.23.133';" change the remote host by your EVE-NG IP address.
+   - In the index.js file, got to the "Route to execute ansible script" and in this line : "const remoteHost = '192.168.23.133';" change the remote host by your EVE-NG IP address.
 
 3. **Configure the frontend** :
 
