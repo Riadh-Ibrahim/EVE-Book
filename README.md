@@ -49,8 +49,17 @@ This VM reservation module allows users to book virtual machines (VMs) from an o
      ANSIBLE_PLAYBOOK_PATH=/root/ansible/playbooks/create_vm.yml
      ```
 
-   - In the index.js file, got to the "Route to execute ansible script" and in this line : "const remoteHost = '192.168.23.133';" change the remote host by your EVE-NG IP address.
+   - In the index.js file, go to the "Route to execute ansible script" and in this line : "const remoteHost = '192.168.23.133';" change the remote host by your EVE-NG IP address.
 
+   - Go to MongoDBCompass and create a local DataBase and name it "EVE-book".
+
+   - In the index.js file, update this part :
+         mongoose.connect("mongodb://127.0.0.1:27017/EVE-Book", {
+          useNewUrlParser: true,
+          useUnifiedTopology: true
+        });
+     with your local DataBase IP address and port.
+     
 3. **Configure the frontend** :
 
    - Navigate to the `client` directory and install the dependencies:
